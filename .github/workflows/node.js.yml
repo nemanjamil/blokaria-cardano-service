@@ -30,5 +30,10 @@ jobs:
         port: 22
         source: "."
         target: "/opt/cardano/cardano_plain_express"
+        script: |
+          cd /opt/cardano/cardano_plain_express
+          ls -lsa
+          pm2 status app
+        
        
    
