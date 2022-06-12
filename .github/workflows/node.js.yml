@@ -31,10 +31,4 @@ jobs:
         script: |
           cd /opt/cardano/cardano_plain_express
           pm2 status app
-        
-        #source: "."
-        #target: "/opt/cardano/cardano_plain_express"
-      
-    #- run: npm ci
-    #- run: npm run build --if-present
-    #- run: npm test
+   
