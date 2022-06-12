@@ -41,7 +41,7 @@ jobs:
         script: |
           cd /opt/cardano/cardano_plain_express
           ls -lsa
-          pm2 status app
+          pm2 restart app
         
        
    
