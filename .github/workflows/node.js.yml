@@ -20,7 +20,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
@@ -28,7 +28,5 @@ jobs:
         username: 'admin'
         key: ${{ secrets.SSH_KEY }}
         port: 22
-        script: |
-          cd /opt/cardano/cardano_plain_express
-          pm2 status app
+       
    
