@@ -28,5 +28,7 @@ jobs:
         username: 'admin'
         key: ${{ secrets.SSH_KEY }}
         port: 22
+        source: "."
+        target: "/opt/cardano/cardano_plain_express"
        
    
