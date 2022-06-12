@@ -27,8 +27,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         
-        source: "."
-        target: "/opt/cardano/cardano_plain_express"
+        #source: "."
+        #target: "/opt/cardano/cardano_plain_express"
       
     #- run: npm ci
     #- run: npm run build --if-present
