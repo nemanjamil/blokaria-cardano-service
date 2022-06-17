@@ -32,7 +32,10 @@ jobs:
         target: "/opt/cardano/cardano_plain_express"
         
     - name: Restart Service
+      run: echo "The API key is:${{ secrets.CARDANO_TESTNET }}"   
       uses: appleboy/ssh-action@master
+      env:
+          CARDANO_NET: ${{ secrets.CARDANO_TESTNET }}
       with:
         host: '185.193.66.140'
         username: 'admin'
