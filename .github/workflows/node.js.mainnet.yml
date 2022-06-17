@@ -41,7 +41,7 @@ jobs:
         script: |
           cd /opt/cardano/cardano_plain_express
           npm install
-          pm2 restart app
+          pm2 restart app.js
         
        
    
