@@ -3,9 +3,6 @@
 
 name: Node.js TESTNET CI
 
-env:
-  CARDANO_NET: "testnet-magic 1097911063"  
-  
 on:
   push:
     branches: [ "dev" ]
@@ -24,7 +21,12 @@ jobs:
     steps:
     - name: Check Keys
       run: |
-        echo "The API key is:${{ secrets.CARDANO_TESTNET }}"     
+        echo "The API key is:${{ secrets.CARDANO_TESTNET }}"  
+    - name: Create env file
+        run: |
+          touch .env
+          echo CARDANO_NET_MAGIC=${{ secrets.CARDANO_TESTNET }} >> .env
+          cat .env   
     - uses: actions/checkout@master
     - name: Copy file via ssh password
       uses: appleboy/scp-action@master
@@ -38,9 +40,6 @@ jobs:
         
     - name: Restart Service
       uses: appleboy/ssh-action@master
-      env:
-          #CARDANO_NET_MAGIC: ${{ env.CARDANO_TESTNET }}
-          CARDANO_NET_MAGIC: "BLA"
       with:
         host: '185.193.66.140'
         username: 'admin'
