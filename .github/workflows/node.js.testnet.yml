@@ -39,7 +39,8 @@ jobs:
     - name: Restart Service
       uses: appleboy/ssh-action@master
       env:
-          CARDANO_NET_MAGIC: ${{ env.CARDANO_TESTNET }}
+          #CARDANO_NET_MAGIC: ${{ env.CARDANO_TESTNET }}
+          CARDANO_NET_MAGIC: "BLA"
       with:
         host: '185.193.66.140'
         username: 'admin'
