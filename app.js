@@ -9,6 +9,8 @@ var getBalance = require('./services/getBalance')
 var checkWallet = require('./services/checkWallet')
 //var createWallet = require('./services/createWallet')
 
+console.log('\n\n');
+console.log('KRENUO PROCESS');
 console.log('APP process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
 
 app.use(express.json())
