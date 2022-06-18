@@ -13,16 +13,19 @@ router.post('/', async (req, res) => {
     const { body } = req;
     console.log("Body: ", body)
 
+    console.log('walletName process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
+    console.log('walletName process.env.CARDANO_NET', process.env.CARDANO_NET);
+
     try {
         const value = await bodySchema.validateAsync(body);
 
         let walletName = body.walletName
 
-	console.log("walletName: ", walletName)
+        console.log("walletName: ", walletName)
 
         const walletscript = cardano.wallet(walletName)
 
-        console.log("Prosao WalletScript", walletscript) 
+        console.log("Prosao WalletScript", walletscript)
 
         res.json({
             "balance": walletscript.balance(),
@@ -31,7 +34,7 @@ router.post('/', async (req, res) => {
 
     }
     catch (err) {
-	console.log(err)
+        console.log(err)
         return res.status(400).json({ error: err.toString() });
     }
 
