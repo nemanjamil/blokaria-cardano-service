@@ -2,12 +2,15 @@
 const express = require('express')
 const app = express()
 const port = 3333
+require('dotenv').config();
 var generateNFT = require('./services/generateNFT');
 var sendAssetToWallet = require('./services/sendAssetToWallet');
 var getBalance = require('./services/getBalance')
 var checkWallet = require('./services/checkWallet')
 //var createWallet = require('./services/createWallet')
- 
+
+console.log('APP process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
+
 app.use(express.json())
 
 app.use('/generateNFT', generateNFT);
