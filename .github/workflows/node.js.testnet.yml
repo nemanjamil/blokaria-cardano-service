@@ -1,11 +1,5 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js TESTNET CI
 
-env:
-  CARDANO_NET: "testnet-magic 1097911063"  
-  
 on:
   push:
     branches: [ "dev" ]
@@ -19,15 +13,23 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
-    - name: Check Keys
-      run: |
-        echo "The API key is:${{ secrets.CARDANO_TESTNET }}"   
-        echo "The API key is:${{ env.CARDANO_NET }}"   
-        echo $CARDANO_NET   
-    - uses: actions/checkout@master
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_CARDANO_NET_MAGIC: ${{ secrets.CARDANO_TESTNET }}
+        file_name: .env
+    - name: Copy file .env via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: '185.193.66.140'
+        username: 'admin'
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        source: '.env'
+        target: '/opt/cardano/cardano_plain_express'
+    #- uses: actions/checkout@master
     - name: Copy file via ssh password
       uses: appleboy/scp-action@master
       with:
@@ -40,8 +42,6 @@ jobs:
         
     - name: Restart Service
       uses: appleboy/ssh-action@master
-      env:
-          CARDANO_NET: "testnet-magic 1097911063"
       with:
         host: '185.193.66.140'
         username: 'admin'
@@ -49,7 +49,7 @@ jobs:
         port: 22
         script: |
           cd /opt/cardano/cardano_plain_express
-          ls -lsa
+          npm install
           pm2 restart app
         
        
