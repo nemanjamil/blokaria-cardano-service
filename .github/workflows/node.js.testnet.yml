@@ -24,9 +24,7 @@ jobs:
     steps:
     - name: Check Keys
       run: |
-        echo "The API key is:${{ secrets.CARDANO_TESTNET }}"   
-        echo "The API key is:${{ env.CARDANO_NET }}"   
-        echo $CARDANO_NET   
+        echo "The API key is:${{ secrets.CARDANO_TESTNET }}"     
     - uses: actions/checkout@master
     - name: Copy file via ssh password
       uses: appleboy/scp-action@master
@@ -41,7 +39,7 @@ jobs:
     - name: Restart Service
       uses: appleboy/ssh-action@master
       env:
-          CARDANO_NET: "testnet-magic 1097911063"
+          CARDANO_NET_MAGIC: ${{ env.CARDANO_TESTNET }}
       with:
         host: '185.193.66.140'
         username: 'admin'
