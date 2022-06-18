@@ -1,7 +1,5 @@
 const Cardano = require("cardanocli-js")
 
-console.log('Cardano process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
-
 const cardano = new Cardano({
     //network: "testnet-magic 1097911063",
     network: process.env.CARDANO_NET_MAGIC,

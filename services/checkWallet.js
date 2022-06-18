@@ -13,8 +13,7 @@ router.post('/', async (req, res) => {
     const { body } = req;
     console.log("Body: ", body)
 
-    console.log('walletName process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
-    console.log('walletName process.env.CARDANO_NET', process.env.CARDANO_NET);
+    console.log('Cardano process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
 
     try {
         const value = await bodySchema.validateAsync(body);
