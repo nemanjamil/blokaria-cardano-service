@@ -18,7 +18,6 @@ const bodySchema = Joi.object({
     clientName: Joi.string().max(60).optional().allow(""),
 
     walletQrId: Joi.string().max(60).required(),
-    //nftimage: Joi.string().max(60).optional().allow(""),
 
     contributorData: Joi.string().max(60).optional().allow(""),
     clientemailcb: Joi.boolean(),
@@ -58,7 +57,6 @@ router.post("/", async (req, res) => {
             clientName: body.clientName,
 
             walletQrId: body.walletQrId,
-            //nftimage: body.nftimage,
 
             contributorData: body.contributorData,
             clientemailcb: body.clientemailcb,
@@ -159,14 +157,14 @@ router.post("/", async (req, res) => {
 
 const generateMetaData = (qrCodeDbData) => {
 
-    console.log('\n\n generateMetaData qrCodeDbData : ', qrCodeDbData);
+    console.log('\n\ngenerateMetaData qrCodeDbData : ', qrCodeDbData);
 
     let internalCode = {
         k: {
             string: "internalCode",
         },
         v: {
-            string: qrCodeDbData[0].walletQrId,
+            string: qrCodeDbData.walletQrId,
         },
     };
     let merchantName = {
@@ -174,7 +172,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "CreatorName",
         },
         v: {
-            string: qrCodeDbData[0].userFullname,
+            string: qrCodeDbData.userFullname,
         },
     };
     let productName = {
@@ -182,7 +180,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "ProductName",
         },
         v: {
-            string: qrCodeDbData[0].productName,
+            string: qrCodeDbData.productName,
         },
     };
 
@@ -191,7 +189,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "CreatorEmail",
         },
         v: {
-            string: qrCodeDbData[0].userEmail,
+            string: qrCodeDbData.userEmail,
         },
     };
 
@@ -200,7 +198,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "CreatorMessage",
         },
         v: {
-            string: qrCodeDbData[0].userDesc,
+            string: qrCodeDbData.userDesc,
         },
     };
 
@@ -209,7 +207,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "OwnerName",
         },
         v: {
-            string: qrCodeDbData[0].clientName,
+            string: qrCodeDbData.clientName,
         },
     };
 
@@ -218,7 +216,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "OwnerEmail",
         },
         v: {
-            string: qrCodeDbData[0].clientEmail,
+            string: qrCodeDbData.clientEmail,
         },
     };
 
@@ -227,7 +225,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "OwnerMessage",
         },
         v: {
-            string: qrCodeDbData[0].clientMessage,
+            string: qrCodeDbData.clientMessage,
         },
     };
 
@@ -236,7 +234,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "WebSiteParams",
         },
         v: {
-            string: `/status/${qrCodeDbData[0].walletQrId}`,
+            string: `/status/${qrCodeDbData.walletQrId}`,
         },
     };
 
@@ -254,7 +252,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "NftImageHash",
         },
         v: {
-            string: qrCodeDbData[0].nftimage,
+            string: qrCodeDbData.nftimage,
         },
     };
 
@@ -263,7 +261,7 @@ const generateMetaData = (qrCodeDbData) => {
             string: "Contributor",
         },
         v: {
-            string: qrCodeDbData[0].contributorData,
+            string: qrCodeDbData.contributorData,
         },
     };
 
@@ -274,17 +272,17 @@ const generateMetaData = (qrCodeDbData) => {
     finalArray.push(merchantEmail);
     finalArray.push(merchantMessage);
 
-    qrCodeDbData[0].ownernamecb ? finalArray.push(clientName) : "";
-    qrCodeDbData[0].clientemailcb ? finalArray.push(clientEmail) : "";
+    qrCodeDbData.ownernamecb ? finalArray.push(clientName) : "";
+    qrCodeDbData.clientemailcb ? finalArray.push(clientEmail) : "";
 
     finalArray.push(clientMessage);
 
     finalArray.push(productLink);
     finalArray.push(webSite);
     finalArray.push(internalCode);
-    qrCodeDbData[0].nftimage ? finalArray.push(nftimage) : "";
+    qrCodeDbData.nftimage ? finalArray.push(nftimage) : "";
 
-    qrCodeDbData[0].contributorData ? finalArray.push(contributorData) : "";
+    qrCodeDbData.contributorData ? finalArray.push(contributorData) : "";
 
     console.log('\n\n\ finalArray');
     console.dir(finalArray, { depth: null });
