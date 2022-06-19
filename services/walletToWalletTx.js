@@ -92,27 +92,21 @@ router.post("/", async (req, res) => {
 
         let getAllData = walletBalance.utxo[0].value;
         console.log("getAllData", getAllData);
+        delete getAllData.undefined;
 
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
 
         getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
-
-        // let metaDataObjPayload = {
-        //     [rndBr]: {
-        //         map: metaDataObj,
-        //     },
-        // };
-        // console.log("\n\n metaDataObjPayload");
-        // console.dir(metaDataObjPayload, { depth: null });
+        console.log("getAllData ", getAllData);
 
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
             txOut: [
                 {
                     address: sender.paymentAddr,
-                    getAllData,
+                    value: getAllData,
                 },
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
