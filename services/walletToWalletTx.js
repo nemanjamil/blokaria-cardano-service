@@ -101,7 +101,7 @@ router.post("/", async (req, res) => {
                 }, //value going back to sender
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
-            metadata: { rndBr: metaDataObj },
+            metadata: { [rndBr]: metaDataObj },
         };
 
         console.log("\n\ntxInfo ", txInfo);
