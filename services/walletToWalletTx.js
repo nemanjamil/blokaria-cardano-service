@@ -177,8 +177,8 @@ const generateMetaDataPlain = (qrCodeDbData) => {
     finalArray["CreatorEmail"] = qrCodeDbData.userEmail;
     finalArray["CreatorMessage"] = qrCodeDbData.userDesc;
 
-    qrCodeDbData.ownernamecb ? finalArray["clientName"] = qrCodeDbData.clientName : "";
-    qrCodeDbData.clientemailcb ? finalArray["clientEmail"] = qrCodeDbData.clientEmail : "";
+    qrCodeDbData.ownernamecb ? finalArray["ClientName"] = qrCodeDbData.clientName : "";
+    qrCodeDbData.clientemailcb ? finalArray["ClientEmail"] = qrCodeDbData.clientEmail : "";
     finalArray["ClientMessage"] = qrCodeDbData.clientMessage;
 
     finalArray["WebSiteParams"] = `/status/${qrCodeDbData.walletQrId}`;
