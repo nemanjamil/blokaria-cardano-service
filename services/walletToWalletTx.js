@@ -42,39 +42,40 @@ router.post("/", async (req, res) => {
 
         console.log("GENERATE NFT Start \n\n");
 
-        await bodySchema.validateAsync(body[0]);
+        await bodySchema.validateAsync(body);
 
         console.log("\n\nvalidateAsyncJoi DONE");
 
         let objectToTest = {
-            userDesc: body[0].userDesc,
-            userFullname: body[0].userFullname,
-            userEmail: body[0].userEmail,
+            userDesc: body.userDesc,
+            userFullname: body.userFullname,
+            userEmail: body.userEmail,
 
-            productName: body[0].productName,
+            productName: body.productName,
 
-            clientEmail: body[0].clientEmail,
-            clientMessage: body[0].clientMessage,
-            clientName: body[0].clientName,
+            clientEmail: body.clientEmail,
+            clientMessage: body.clientMessage,
+            clientName: body.clientName,
 
-            walletQrId: body[0].walletQrId,
-            //nftimage: body[0].nftimage,
+            walletQrId: body.walletQrId,
+            //nftimage: body.nftimage,
 
-            contributorData: body[0].contributorData,
-            clientemailcb: body[0].clientemailcb,
-            ownernamecb: body[0].clientemailcb,
+            contributorData: body.contributorData,
+            clientemailcb: body.clientemailcb,
+            ownernamecb: body.clientemailcb,
 
-            walletName: body[0].walletName,
-            amountValue: body[0].amountValue,
+            walletName: body.walletName,
+            amountValue: body.amountValue,
 
         }
 
-        const { walletName, amountValue } = body[0]
+        console.log("\n\nobjectToTest", objectToTest);
 
+        const { walletName, amountValue } = body
         console.log("\n\nwalletName", walletName);
         console.log("amountValue", amountValue);
 
-        console.log("\n\nobjectToTest", objectToTest);
+
 
         let metaDataObj = generateMetaData(body)
 
