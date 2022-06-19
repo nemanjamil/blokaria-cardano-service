@@ -86,19 +86,38 @@ router.post("/", async (req, res) => {
 
         console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
 
+        let walletBalance = sender.balance();
+        console.log("walletBalance", walletBalance);
+
+        let getAllData = walletBalance.utxo[0].value;
+        const numberOfAssets = Object.keys(getAllData).length;
+
+        console.log("numberOfAssets", numberOfAssets);
+
+        delete getAllData.lovelace;
+        delete getAllData.undefined;
+
+        console.log("getAllData", getAllData);
+
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
-        // create raw transaction
+
+
+        let txOutData = {
+            lovelace: sender.balance().value.lovelace - cardano.toLovelace(amountValue),
+            getAllData
+        }
+
+        console.log("txOutData", txOutData);
+
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
             txOut: [
                 {
                     address: sender.paymentAddr,
-                    value: {
-                        lovelace: sender.balance().value.lovelace - cardano.toLovelace(amountValue),
-                    },
-                }, //value going back to sender
+                    value: txOutData,
+                },
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
             metadata: { [rndBr]: metaDataObj },
@@ -107,6 +126,12 @@ router.post("/", async (req, res) => {
         console.log("\n\ntxInfo ");
         console.dir(txInfo, { depth: null });
 
+        console.log("Original txInfo ", txInfo);
+
+        if (numberOfAssets > 2) {
+            console.log("Entered Update My Wallet");
+            Object.assign(txInfo.txOut[0].value, getAllData);
+        }
 
         let raw = cardano.transactionBuildRaw(txInfo);
 
@@ -142,7 +167,7 @@ router.post("/", async (req, res) => {
 
         res.json({ rndBr, txHash });
     } catch (err) {
-        console.error("\n\n ERROR GENERATE NFT \n\n");
+        console.error("\n\n ERROR GENERATE TRANSACTION \n\n");
         console.error(err);
         console.error("\n\n\n");
         console.error("Error To String: ", err.toString());
