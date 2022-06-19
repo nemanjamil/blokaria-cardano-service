@@ -7,13 +7,25 @@ const cardano = require("../config/cardano");
 // app.use(express.json())
 
 const bodySchema = Joi.object({
-    imageIPFS: Joi.string().min(3).max(100).required(),
-    assetName: Joi.string().min(3).max(100).required(),
-    description: Joi.string().min(3).max(100).required(),
-    authors: Joi.array().optional().allow(""),
-    copyright: Joi.string().optional().allow(""),
-    walletName: Joi.string().min(3).max(100).required(),
-    dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
+    userDesc: Joi.string().max(60).optional().allow(""),
+    userFullname: Joi.string().max(60).optional().allow(""),
+    userEmail: Joi.string().email().max(60).optional().allow(""),
+
+    productName: Joi.string().max(60).required(),
+
+    clientEmail: Joi.string().email().max(60).optional().allow(""),
+    clientMessage: Joi.string().max(60).optional().allow(""),
+    clientName: Joi.string().max(60).optional().allow(""),
+
+    walletQrId: Joi.string().max(60).required(),
+    nftimage: Joi.string().max(60).optional().allow(""),
+
+    contributorData: Joi.string().max(60).optional().allow(""),
+    clientemailcb: Joi.boolean().max(60).optional().allow(""),
+    ownernamecb: Joi.boolean().max(60).optional().allow(""),
+
+    walletName: Joi.string().max(60).required(),
+    amountValue: Joi.number().max(10).required(),
 });
 
 router.use((req, res, next) => {
@@ -23,31 +35,58 @@ router.use((req, res, next) => {
 
 router.post("/", async (req, res) => {
     const { body } = req;
-    console.log("GenerateNft Payload ", body);
+    console.log("GenerateNftTransaction Payload ", body);
+
 
     try {
 
-        let metaDataObj = generateMetaData(body)
-
-        console.dir(metaDataObj, { depth: null });
-
         console.log("GENERATE NFT Start \n\n");
 
-        const value = await bodySchema.validateAsync(body);
-        let imageIPFS = body.imageIPFS;
-        let assetName = body.assetName;
-        let description = body.description;
-        let authors = body.authors;
-        let copyright = body.copyright;
-        let walletName = body.walletName;
+        await bodySchema.validateAsync(body[0]);
 
-        //res.json({imageIPFS,authors})
+        console.log("\n\nvalidateAsyncJoi DONE");
+
+        let objectToTest = {
+            userDesc: body[0].userDesc,
+            userFullname: body[0].userFullname,
+            userEmail: body[0].userEmail,
+
+            productName: body[0].productName,
+
+            clientEmail: body[0].clientEmail,
+            clientMessage: body[0].clientMessage,
+            clientName: body[0].clientName,
+
+            walletQrId: body[0].walletQrId,
+            nftimage: body[0].nftimage,
+
+            contributorData: body[0].contributorData,
+            clientemailcb: body[0].clientemailcb,
+            ownernamecb: body[0].clientemailcb,
+
+            walletName: body[0].walletName,
+            amountValue: body[0].amountValue,
+
+        }
+
+        const { walletName, amountValue } = body[0]
+
+        console.log("\n\nwalletName", walletName);
+        console.log("amountValue", amountValue);
+
+        console.log("\n\nobjectToTest", objectToTest);
+
+        let metaDataObj = generateMetaData(body)
+
+        console.log("\n\nmetaDataObj");
+        console.dir(metaDataObj, { depth: null });
+
+        let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
+        console.log("rndBr: ", rndBr);
 
         console.log("GenerateNft Cardano Wallet Name", walletName);
-
-
-        //funded wallet
         const sender = cardano.wallet(walletName);
+
         console.log(
             "Balance of Sender wallet: " +
             cardano.toAda(sender.balance().value.lovelace) +
@@ -57,9 +96,6 @@ router.post("/", async (req, res) => {
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
-
-        let amount = 2;
-
         // create raw transaction
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
@@ -67,13 +103,16 @@ router.post("/", async (req, res) => {
                 {
                     address: sender.paymentAddr,
                     value: {
-                        lovelace: sender.balance().value.lovelace - cardano.toLovelace(amount),
+                        lovelace: sender.balance().value.lovelace - cardano.toLovelace(amountValue),
                     },
                 }, //value going back to sender
-                { address: receiver, value: { lovelace: cardano.toLovelace(amount) } }, //value going to receiver
+                { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
-            metadata: { 1: metaDataObj },
+            metadata: { rndBr: metaDataObj },
         };
+
+        console.log("\n\ntxInfo ", txInfo);
+
         let raw = cardano.transactionBuildRaw(txInfo);
 
         console.log("raw ", raw);
@@ -86,9 +125,13 @@ router.post("/", async (req, res) => {
 
         //pay the fee by subtracting it from the sender utxo
         txInfo.txOut[0].value.lovelace -= fee;
+        console.log('txInfo.txOut[0].value.lovelace', txInfo.txOut[0].value.lovelace);
+
 
         //create final transaction
         let tx = cardano.transactionBuildRaw({ ...txInfo, fee });
+
+        console.log('cardano.transactionBuildRaw DONE');
 
         //sign the transaction
         let txSigned = cardano.transactionSign({
@@ -96,16 +139,18 @@ router.post("/", async (req, res) => {
             signingKeys: [sender.payment.skey],
         });
 
+        console.log('cardano.transactionSign DONE');
+
         //broadcast transaction
         let txHash = cardano.transactionSubmit(txSigned);
-        console.log("TxHash: " + txHash);
+        console.log("cardano.transactionSubmit DONE: " + txHash);
 
         res.json({ txHash });
     } catch (err) {
-        console.log("\n\n ERROR GENERATE NFT \n\n");
-        console.log(err);
-        console.log("\n\n\n");
-        console.log(err.toString());
+        console.error("\n\n ERROR GENERATE NFT \n\n");
+        console.error(err);
+        console.error("\n\n\n");
+        console.error(err.toString());
         return res.status(400).json({ error: err.toString() });
         //return res.status(400).json(err);
     }
@@ -114,8 +159,6 @@ router.post("/", async (req, res) => {
 const generateMetaData = (qrCodeDbData) => {
 
     console.log('\n\n generateMetaData qrCodeDbData : ', qrCodeDbData);
-
-    let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
 
     let internalCode = {
         k: {
@@ -214,15 +257,6 @@ const generateMetaData = (qrCodeDbData) => {
         },
     };
 
-    // let nftsendaddress = {
-    // 	k: {
-    // 		string: "NftWalletAddress",
-    // 	},
-    // 	v: {
-    // 		string: qrCodeDbData[0].nftsendaddress,
-    // 	},
-    // };
-
     let contributorData = {
         k: {
             string: "Contributor",
@@ -248,34 +282,13 @@ const generateMetaData = (qrCodeDbData) => {
     finalArray.push(webSite);
     finalArray.push(internalCode);
     qrCodeDbData[0].nftimage ? finalArray.push(nftimage) : "";
-    // (qrCodeDbData[0].nftsendaddress) ? finalArray.push(nftsendaddress) : "";
 
     qrCodeDbData[0].contributorData ? finalArray.push(contributorData) : "";
 
+    console.log('\n\n\ finalArray');
+    console.dir(finalArray, { depth: null });
+
     return finalArray;
-
-    // let metaDataObj = {
-    //     [rndBr]: {
-    //         map: finalArray,
-    //     },
-    // };
-
-    // let dataObject = {
-    //     passphrase: `${process.env.WALLET_PASSPHRASE_1}`,
-    //     payments: [
-    //         {
-    //             address: Address,
-    //             amount: {
-    //                 quantity: 1000000,
-    //                 unit: "lovelace",
-    //             },
-    //         },
-    //     ],
-    //     withdrawal: "self",
-    //     metadata: metaDataObj,
-    // };
-
-
 }
 
 module.exports = router;
