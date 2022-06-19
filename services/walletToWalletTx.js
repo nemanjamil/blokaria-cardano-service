@@ -24,178 +24,16 @@ router.use((req, res, next) => {
 router.post("/", async (req, res) => {
     const { body } = req;
     console.log("GenerateNft Payload ", body);
-    let qrCodeDbData = body.blabla;
+
     try {
 
-        let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
-
-        let internalCode = {
-            k: {
-                string: "internalCode",
-            },
-            v: {
-                string: qrCodeDbData[0].walletQrId,
-            },
-        };
-        let merchantName = {
-            k: {
-                string: "CreatorName",
-            },
-            v: {
-                string: qrCodeDbData[0].userFullname,
-            },
-        };
-        let productName = {
-            k: {
-                string: "ProductName",
-            },
-            v: {
-                string: qrCodeDbData[0].productName,
-            },
-        };
-
-        let merchantEmail = {
-            k: {
-                string: "CreatorEmail",
-            },
-            v: {
-                string: qrCodeDbData[0].userEmail,
-            },
-        };
-
-        let merchantMessage = {
-            k: {
-                string: "CreatorMessage",
-            },
-            v: {
-                string: qrCodeDbData[0].userDesc,
-            },
-        };
-
-        let clientName = {
-            k: {
-                string: "OwnerName",
-            },
-            v: {
-                string: qrCodeDbData[0].clientName,
-            },
-        };
-
-        let clientEmail = {
-            k: {
-                string: "OwnerEmail",
-            },
-            v: {
-                string: qrCodeDbData[0].clientEmail,
-            },
-        };
-
-        let clientMessage = {
-            k: {
-                string: "OwnerMessage",
-            },
-            v: {
-                string: qrCodeDbData[0].clientMessage,
-            },
-        };
-
-        let productLink = {
-            k: {
-                string: "WebSiteParams",
-            },
-            v: {
-                string: `/status/${qrCodeDbData[0].walletQrId}`,
-            },
-        };
-
-        let webSite = {
-            k: {
-                string: "WebSiteDomain",
-            },
-            v: {
-                string: process.env.BLOKARIA_WEBSITE,
-            },
-        };
-
-        let nftimage = {
-            k: {
-                string: "NftImageHash",
-            },
-            v: {
-                string: qrCodeDbData[0].nftimage,
-            },
-        };
-
-        // let nftsendaddress = {
-        // 	k: {
-        // 		string: "NftWalletAddress",
-        // 	},
-        // 	v: {
-        // 		string: qrCodeDbData[0].nftsendaddress,
-        // 	},
-        // };
-
-        let contributorData = {
-            k: {
-                string: "Contributor",
-            },
-            v: {
-                string: qrCodeDbData[0].contributorData,
-            },
-        };
-
-        let finalArray = [];
-        finalArray.push(productName);
-
-        finalArray.push(merchantName);
-        finalArray.push(merchantEmail);
-        finalArray.push(merchantMessage);
-
-        qrCodeDbData[0].ownernamecb ? finalArray.push(clientName) : "";
-        qrCodeDbData[0].clientemailcb ? finalArray.push(clientEmail) : "";
-
-        finalArray.push(clientMessage);
-
-        finalArray.push(productLink);
-        finalArray.push(webSite);
-        finalArray.push(internalCode);
-        qrCodeDbData[0].nftimage ? finalArray.push(nftimage) : "";
-        // (qrCodeDbData[0].nftsendaddress) ? finalArray.push(nftsendaddress) : "";
-
-        qrCodeDbData[0].contributorData ? finalArray.push(contributorData) : "";
-
-        let metaDataObj = {
-            [rndBr]: {
-                map: finalArray,
-            },
-        };
-
-        // let dataObject = {
-        //     passphrase: `${process.env.WALLET_PASSPHRASE_1}`,
-        //     payments: [
-        //         {
-        //             address: Address,
-        //             amount: {
-        //                 quantity: 1000000,
-        //                 unit: "lovelace",
-        //             },
-        //         },
-        //     ],
-        //     withdrawal: "self",
-        //     metadata: metaDataObj,
-        // };
-
+        let metaDataObj = generateMetaData(body)
 
         console.dir(metaDataObj, { depth: null });
 
-
         console.log("GENERATE NFT Start \n\n");
+
         const value = await bodySchema.validateAsync(body);
-
-        console.log("Successfull Validation");
-
-        // ovde proveraval da li sam dobio sve potrebne parametre
-        // email , message 1, meesage 2, email2.....
         let imageIPFS = body.imageIPFS;
         let assetName = body.assetName;
         let description = body.description;
@@ -272,6 +110,173 @@ router.post("/", async (req, res) => {
         //return res.status(400).json(err);
     }
 });
+
+const generateMetaData = (qrCodeDbData) => {
+
+    console.log('\n\n generateMetaData qrCodeDbData : ', qrCodeDbData);
+
+    let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
+
+    let internalCode = {
+        k: {
+            string: "internalCode",
+        },
+        v: {
+            string: qrCodeDbData[0].walletQrId,
+        },
+    };
+    let merchantName = {
+        k: {
+            string: "CreatorName",
+        },
+        v: {
+            string: qrCodeDbData[0].userFullname,
+        },
+    };
+    let productName = {
+        k: {
+            string: "ProductName",
+        },
+        v: {
+            string: qrCodeDbData[0].productName,
+        },
+    };
+
+    let merchantEmail = {
+        k: {
+            string: "CreatorEmail",
+        },
+        v: {
+            string: qrCodeDbData[0].userEmail,
+        },
+    };
+
+    let merchantMessage = {
+        k: {
+            string: "CreatorMessage",
+        },
+        v: {
+            string: qrCodeDbData[0].userDesc,
+        },
+    };
+
+    let clientName = {
+        k: {
+            string: "OwnerName",
+        },
+        v: {
+            string: qrCodeDbData[0].clientName,
+        },
+    };
+
+    let clientEmail = {
+        k: {
+            string: "OwnerEmail",
+        },
+        v: {
+            string: qrCodeDbData[0].clientEmail,
+        },
+    };
+
+    let clientMessage = {
+        k: {
+            string: "OwnerMessage",
+        },
+        v: {
+            string: qrCodeDbData[0].clientMessage,
+        },
+    };
+
+    let productLink = {
+        k: {
+            string: "WebSiteParams",
+        },
+        v: {
+            string: `/status/${qrCodeDbData[0].walletQrId}`,
+        },
+    };
+
+    let webSite = {
+        k: {
+            string: "WebSiteDomain",
+        },
+        v: {
+            string: process.env.BLOKARIA_WEBSITE,
+        },
+    };
+
+    let nftimage = {
+        k: {
+            string: "NftImageHash",
+        },
+        v: {
+            string: qrCodeDbData[0].nftimage,
+        },
+    };
+
+    // let nftsendaddress = {
+    // 	k: {
+    // 		string: "NftWalletAddress",
+    // 	},
+    // 	v: {
+    // 		string: qrCodeDbData[0].nftsendaddress,
+    // 	},
+    // };
+
+    let contributorData = {
+        k: {
+            string: "Contributor",
+        },
+        v: {
+            string: qrCodeDbData[0].contributorData,
+        },
+    };
+
+    let finalArray = [];
+    finalArray.push(productName);
+
+    finalArray.push(merchantName);
+    finalArray.push(merchantEmail);
+    finalArray.push(merchantMessage);
+
+    qrCodeDbData[0].ownernamecb ? finalArray.push(clientName) : "";
+    qrCodeDbData[0].clientemailcb ? finalArray.push(clientEmail) : "";
+
+    finalArray.push(clientMessage);
+
+    finalArray.push(productLink);
+    finalArray.push(webSite);
+    finalArray.push(internalCode);
+    qrCodeDbData[0].nftimage ? finalArray.push(nftimage) : "";
+    // (qrCodeDbData[0].nftsendaddress) ? finalArray.push(nftsendaddress) : "";
+
+    qrCodeDbData[0].contributorData ? finalArray.push(contributorData) : "";
+
+    return finalArray;
+
+    // let metaDataObj = {
+    //     [rndBr]: {
+    //         map: finalArray,
+    //     },
+    // };
+
+    // let dataObject = {
+    //     passphrase: `${process.env.WALLET_PASSPHRASE_1}`,
+    //     payments: [
+    //         {
+    //             address: Address,
+    //             amount: {
+    //                 quantity: 1000000,
+    //                 unit: "lovelace",
+    //             },
+    //         },
+    //     ],
+    //     withdrawal: "self",
+    //     metadata: metaDataObj,
+    // };
+
+
+}
 
 module.exports = router;
 
