@@ -7,6 +7,7 @@ var generateNFT = require('./services/generateNFT');
 var sendAssetToWallet = require('./services/sendAssetToWallet');
 var getBalance = require('./services/getBalance')
 var checkWallet = require('./services/checkWallet')
+var walletToWalletTx = require('./services/walletToWalletTx')
 //var createWallet = require('./services/createWallet')
 
 app.use(express.json())
@@ -15,6 +16,7 @@ app.use('/generateNFT', generateNFT);
 app.use('/sendAssetToWallet', sendAssetToWallet);
 app.use('/getBalance', getBalance);
 app.use('/checkWallet', checkWallet);
+app.use('/generateTransaction', walletToWalletTx);
 //app.use('/sendAssetToWallet', sendAssetToWallet);
 
 
