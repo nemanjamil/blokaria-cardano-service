@@ -74,7 +74,7 @@ router.post("/", async (req, res) => {
         console.log("amountValue", amountValue);
 
         // METADATA
-        let metaDataObj = generateMetaData(body)
+        let metaDataObj = generateMetaDataPlain(body)
         console.log("\n\n metaDataObj");
         console.dir(metaDataObj, { depth: null });
 
@@ -102,9 +102,7 @@ router.post("/", async (req, res) => {
         console.log("getAllData ", getAllData);
 
         let metaDataObjPayload = {
-            [rndBr]: {
-                map: metaDataObj,
-            },
+            [rndBr]: metaDataObj,
         };
         console.log("\n\n metaDataObjPayload");
         console.dir(metaDataObjPayload, { depth: null });
@@ -118,8 +116,7 @@ router.post("/", async (req, res) => {
                 },
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
-
-            //metadata: metaDataObjPayload,
+            // withdrawal: "self", PROVERITI DA LI RADI - Ovo znaci da skida pare omah sa sendera, odnosno ne salje pare receiveru 1ada
             metadata: metaDataObjPayload,
         };
 
@@ -299,6 +296,20 @@ const generateMetaData = (qrCodeDbData) => {
     qrCodeDbData.contributorData ? finalArray.push(contributorData) : "";
 
     console.log('\n\n\ finalArray');
+    console.dir(finalArray, { depth: null });
+
+    return finalArray;
+}
+const generateMetaDataPlain = (qrCodeDbData) => {
+
+    console.log('\n\ngenerateMetaData qrCodeDbData : ', qrCodeDbData);
+
+    let finalArray = {};
+    finalArray[productName] = qrCodeDbData.productName;
+    finalArray[merchantName] = qrCodeDbData.merchantName;
+    finalArray[merchantName] = qrCodeDbData.merchantName;
+    finalArray[clientName] = qrCodeDbData.clientName;
+
     console.dir(finalArray, { depth: null });
 
     return finalArray;
