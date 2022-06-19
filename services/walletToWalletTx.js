@@ -18,7 +18,7 @@ const bodySchema = Joi.object({
     clientName: Joi.string().max(60).optional().allow(""),
 
     walletQrId: Joi.string().max(60).required(),
-    nftimage: Joi.string().max(60).optional().allow(""),
+    //nftimage: Joi.string().max(60).optional().allow(""),
 
     contributorData: Joi.string().max(60).optional().allow(""),
     clientemailcb: Joi.boolean(),
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
             clientName: body[0].clientName,
 
             walletQrId: body[0].walletQrId,
-            nftimage: body[0].nftimage,
+            //nftimage: body[0].nftimage,
 
             contributorData: body[0].contributorData,
             clientemailcb: body[0].clientemailcb,
