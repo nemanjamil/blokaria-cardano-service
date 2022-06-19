@@ -21,8 +21,8 @@ const bodySchema = Joi.object({
     nftimage: Joi.string().max(60).optional().allow(""),
 
     contributorData: Joi.string().max(60).optional().allow(""),
-    clientemailcb: Joi.boolean().max(60).optional().allow(""),
-    ownernamecb: Joi.boolean().max(60).optional().allow(""),
+    clientemailcb: Joi.boolean(),
+    ownernamecb: Joi.boolean(),
 
     walletName: Joi.string().max(60).required(),
     amountValue: Joi.number().max(10).required(),
