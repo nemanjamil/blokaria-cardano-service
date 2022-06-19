@@ -19,11 +19,11 @@ jobs:
         node-version: [16.x]
     
     steps:
-      # - name: Print ENV KEYS
-      #   ## Reference your environment variables
-      #   run: |
-      #    echo "The API key is:$BLOKARIA_WEBSITE" 
-      #    echo "Receiver Addr:$RECEIVER_ADDR" 
+    - name: Print ENV KEYS
+      ## Reference your environment variables
+      run: |
+        echo "The API key is:$BLOKARIA_WEBSITE" 
+        echo "Receiver Addr:$RECEIVER_ADDR" 
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1
       with:
