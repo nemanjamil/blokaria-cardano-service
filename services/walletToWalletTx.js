@@ -302,13 +302,13 @@ const generateMetaData = (qrCodeDbData) => {
 }
 const generateMetaDataPlain = (qrCodeDbData) => {
 
-    console.log('\n\ngenerateMetaData qrCodeDbData : ', qrCodeDbData);
+    console.log('\n\n generateMetaDataPlain qrCodeDbData : ', qrCodeDbData);
 
     let finalArray = {};
-    finalArray[productName] = qrCodeDbData.productName;
-    finalArray[merchantName] = qrCodeDbData.merchantName;
-    finalArray[merchantName] = qrCodeDbData.merchantName;
-    finalArray[clientName] = qrCodeDbData.clientName;
+    finalArray["productName"] = qrCodeDbData.productName;
+    finalArray["merchantName"] = qrCodeDbData.merchantName;
+    finalArray["merchantName"] = qrCodeDbData.merchantName;
+    finalArray["clientName"] = qrCodeDbData.clientName;
 
     console.dir(finalArray, { depth: null });
 
