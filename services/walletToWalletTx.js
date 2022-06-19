@@ -97,15 +97,15 @@ router.post("/", async (req, res) => {
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
 
-        getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue),
+        getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
 
-            // let metaDataObjPayload = {
-            //     [rndBr]: {
-            //         map: metaDataObj,
-            //     },
-            // };
-            console.log("\n\n metaDataObjPayload");
-        console.dir(metaDataObjPayload, { depth: null });
+        // let metaDataObjPayload = {
+        //     [rndBr]: {
+        //         map: metaDataObj,
+        //     },
+        // };
+        // console.log("\n\n metaDataObjPayload");
+        // console.dir(metaDataObjPayload, { depth: null });
 
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
