@@ -101,6 +101,14 @@ router.post("/", async (req, res) => {
         getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
         console.log("getAllData ", getAllData);
 
+        let metaDataObjPayload = {
+            [rndBr]: {
+                map: metaDataObj,
+            },
+        };
+        console.log("\n\n metaDataObjPayload");
+        console.dir(metaDataObjPayload, { depth: null });
+
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
             txOut: [
@@ -112,7 +120,7 @@ router.post("/", async (req, res) => {
             ],
 
             //metadata: metaDataObjPayload,
-            metadata: { 1623566456235234: { cardanocliJs: "First Metadata from cardanocli-js" } },
+            metadata: metaDataObjPayload,
         };
 
         console.log("\n\n txInfo ");
