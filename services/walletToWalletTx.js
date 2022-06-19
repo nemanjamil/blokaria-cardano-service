@@ -150,7 +150,7 @@ router.post("/", async (req, res) => {
         console.error("\n\n ERROR GENERATE NFT \n\n");
         console.error(err);
         console.error("\n\n\n");
-        console.error(err.toString());
+        console.error("Error To String: ", err.toString());
         return res.status(400).json({ error: err.toString() });
         //return res.status(400).json(err);
     }
