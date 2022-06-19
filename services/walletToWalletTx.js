@@ -66,17 +66,15 @@ router.post("/", async (req, res) => {
             amountValue: body.amountValue,
 
         }
-
         console.log("\n\nobjectToTest", objectToTest);
 
+        // WALLET
         const { walletName, amountValue } = body
         console.log("\n\nwalletName", walletName);
         console.log("amountValue", amountValue);
 
-
-
+        // METADATA
         let metaDataObj = generateMetaData(body)
-
         console.log("\n\nmetaDataObj");
         console.dir(metaDataObj, { depth: null });
 
@@ -86,11 +84,7 @@ router.post("/", async (req, res) => {
         console.log("GenerateNft Cardano Wallet Name", walletName);
         const sender = cardano.wallet(walletName);
 
-        console.log(
-            "Balance of Sender wallet: " +
-            cardano.toAda(sender.balance().value.lovelace) +
-            " ADA"
-        );
+        console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
 
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
@@ -144,7 +138,7 @@ router.post("/", async (req, res) => {
         let txHash = cardano.transactionSubmit(txSigned);
         console.log("cardano.transactionSubmit DONE: " + txHash);
 
-        res.json({ txHash });
+        res.json({ rndBr, txHash });
     } catch (err) {
         console.error("\n\n ERROR GENERATE NFT \n\n");
         console.error(err);
