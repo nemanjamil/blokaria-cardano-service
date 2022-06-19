@@ -104,7 +104,9 @@ router.post("/", async (req, res) => {
             metadata: { [rndBr]: metaDataObj },
         };
 
-        console.log("\n\ntxInfo ", txInfo);
+        console.log("\n\ntxInfo ");
+        console.dir(txInfo, { depth: null });
+
 
         let raw = cardano.transactionBuildRaw(txInfo);
 
