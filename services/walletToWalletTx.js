@@ -91,33 +91,20 @@ router.post("/", async (req, res) => {
         console.log("walletBalance", walletBalance);
 
         let getAllData = walletBalance.utxo[0].value;
-        const numberOfAssets = Object.keys(getAllData).length;
-
-        console.log("numberOfAssets", numberOfAssets);
-
-        delete getAllData.lovelace;
-        delete getAllData.undefined;
-
         console.log("getAllData", getAllData);
 
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
 
+        getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue),
 
-        let txOutData = {
-            lovelace: sender.balance().value.lovelace - cardano.toLovelace(amountValue),
-            getAllData
-        }
-
-        console.log("txOutData", txOutData);
-
-        let metaDataObjPayload = {
-            [rndBr]: {
-                map: metaDataObj,
-            },
-        };
-        console.log("\n\n metaDataObjPayload");
+            // let metaDataObjPayload = {
+            //     [rndBr]: {
+            //         map: metaDataObj,
+            //     },
+            // };
+            console.log("\n\n metaDataObjPayload");
         console.dir(metaDataObjPayload, { depth: null });
 
         let txInfo = {
@@ -125,23 +112,17 @@ router.post("/", async (req, res) => {
             txOut: [
                 {
                     address: sender.paymentAddr,
-                    value: txOutData,
+                    getAllData,
                 },
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
 
-            metadata: metaDataObjPayload,
+            //metadata: metaDataObjPayload,
+            metadata: { 1623566456235234: { cardanocliJs: "First Metadata from cardanocli-js" } },
         };
 
-        console.log("\n\ntxInfo ");
+        console.log("\n\n txInfo ");
         console.dir(txInfo, { depth: null });
-
-        console.log("Original txInfo ", txInfo);
-
-        if (numberOfAssets > 2) {
-            console.log("Entered Update My Wallet");
-            Object.assign(txInfo.txOut[0].value, getAllData);
-        }
 
         let raw = cardano.transactionBuildRaw(txInfo);
 
