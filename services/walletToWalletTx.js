@@ -75,8 +75,9 @@ router.post("/", async (req, res) => {
 
         // METADATA
         let metaDataObj = generateMetaData(body)
-        console.log("\n\nmetaDataObj");
+        console.log("\n\n metaDataObj");
         console.dir(metaDataObj, { depth: null });
+
 
         let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
         console.log("rndBr: ", rndBr);
@@ -111,6 +112,14 @@ router.post("/", async (req, res) => {
 
         console.log("txOutData", txOutData);
 
+        let metaDataObjPayload = {
+            [rndBr]: {
+                map: metaDataObj,
+            },
+        };
+        console.log("\n\n metaDataObjPayload");
+        console.dir(metaDataObjPayload, { depth: null });
+
         let txInfo = {
             txIn: cardano.queryUtxo(sender.paymentAddr),
             txOut: [
@@ -120,7 +129,8 @@ router.post("/", async (req, res) => {
                 },
                 { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
             ],
-            metadata: { [rndBr]: metaDataObj },
+
+            metadata: metaDataObjPayload,
         };
 
         console.log("\n\ntxInfo ");
