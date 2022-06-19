@@ -5,10 +5,9 @@ on:
     branches: [ "dev" ]
   workflow_dispatch:
 
-
-env: 
-  BLOKARIA_WEBSITE: 'https://testnet.blokaria.com/'
-  RECEIVER_ADDR: 'addr_test1qqy6mh2en4evwtftsqga7206x7gds9nczeazmth372e8malmv5q2kh07p6qgt6nc9fkawqp09ynvdf3el9hdrt2gg0pspfhm8g'
+# env: 
+#   BLOKARIA_WEBSITE: 'https://testnet.blokaria.com/'
+#   RECEIVER_ADDR: 'addr_test1qqy6mh2en4evwtftsqga7206x7gds9nczeazmth372e8malmv5q2kh07p6qgt6nc9fkawqp09ynvdf3el9hdrt2gg0pspfhm8g'
 
 jobs:
   build:
