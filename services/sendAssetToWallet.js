@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
     let walletName = body.walletName;
     let assetId = body.assetId;
     let amountValue = body.amountValue;
+    console.log("amountValue ", amountValue);
     //const amountValue = 1;
 
     const sender = cardano.wallet(walletName);
@@ -43,7 +44,7 @@ router.post("/", async (req, res) => {
     console.log("numberOfAssets", numberOfAssets);
 
     delete getAllData.lovelace;
-    delete getAllData.undefined;
+    //delete getAllData.undefined;
     delete getAllData[assetId];
 
     console.log("Sender wallet name ", walletName);
@@ -54,8 +55,6 @@ router.post("/", async (req, res) => {
     );
 
     const receiver = addressWallet;
-
-    //let amountValue = 1.5
 
     const txInfo = {
       txIn: cardano.queryUtxo(sender.paymentAddr),
