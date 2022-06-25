@@ -27,8 +27,8 @@ router.post("/", async (req, res) => {
     let addressWallet = body.addressWallet;
     let walletName = body.walletName;
     let assetId = body.assetId;
-    //let amountValue = body.amountValue;
-    const amountValue = 1;
+    let amountValue = body.amountValue;
+    //const amountValue = 1;
 
     const sender = cardano.wallet(walletName);
 
