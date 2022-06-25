@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     let addressWallet = body.addressWallet;
     let walletName = body.walletName;
     let assetId = body.assetId;
-    let amountValue = body.amountValue;
+    let amountValue = parseInt(body.amountValue);
     console.log("amountValue ", amountValue);
     //const amountValue = 1;
 
