@@ -49,8 +49,8 @@ router.post("/", async (req, res) => {
     console.log("Sender wallet name ", walletName);
     console.log(
       "Balance of Sender wallet: " +
-        cardano.toAda(sender.balance().value.lovelace) +
-        " ADA"
+      cardano.toAda(sender.balance().value.lovelace) +
+      " ADA"
     );
 
     const receiver = addressWallet;
@@ -126,7 +126,9 @@ router.post("/", async (req, res) => {
     const txHash = cardano.transactionSubmit(txSigned);
 
     console.log("SendAssetToClient FINISH");
+    console.log("txHash: ", txHash);
     res.json({ txHash });
+
     console.log("SendAssetToWallet ", txHash);
   } catch (err) {
     return res.status(400).json({ error: err.toString() });
