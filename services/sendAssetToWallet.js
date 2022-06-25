@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     console.log("numberOfAssets", numberOfAssets);
 
     delete getAllData.lovelace;
-    //delete getAllData.undefined;
+    delete getAllData.undefined;
     delete getAllData[assetId];
 
     console.log("Sender wallet name ", walletName);
