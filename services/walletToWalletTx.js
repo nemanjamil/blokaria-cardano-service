@@ -28,18 +28,18 @@ const bodySchema = Joi.object({
 });
 
 router.use((req, res, next) => {
-    console.log("Time generateNFT: ", Date.now());
+    console.log("Time wallet to wallet tx: ", Date.now());
     next();
 });
 
 router.post("/", async (req, res) => {
     const { body } = req;
-    console.log("GenerateNftTransaction Payload ", body);
+    console.log("GenerateWalletToWalletTransaction Payload ", body);
 
 
     try {
 
-        console.log("GENERATE NFT Start \n\n");
+        console.log("GENERATE wallet to wallet Start \n\n");
 
         await bodySchema.validateAsync(body);
 
@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
         let rndBr = "888000999" + Math.floor(Math.random() * 1000000);
         console.log("rndBr: ", rndBr);
 
-        console.log("GenerateNft Cardano Wallet Name", walletName);
+        console.log("Generate Cardano Wallet Name", walletName);
         const sender = cardano.wallet(walletName);
 
         console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");

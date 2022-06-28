@@ -27,8 +27,9 @@ router.post("/", async (req, res) => {
     let addressWallet = body.addressWallet;
     let walletName = body.walletName;
     let assetId = body.assetId;
-    //let amountValue = body.amountValue;
-    const amountValue = 1;
+    let amountValue = body.amountValue;
+    console.log("amountValue ", amountValue);
+    //const amountValue = 1;
 
     const sender = cardano.wallet(walletName);
 
@@ -49,13 +50,11 @@ router.post("/", async (req, res) => {
     console.log("Sender wallet name ", walletName);
     console.log(
       "Balance of Sender wallet: " +
-        cardano.toAda(sender.balance().value.lovelace) +
-        " ADA"
+      cardano.toAda(sender.balance().value.lovelace) +
+      " ADA"
     );
 
     const receiver = addressWallet;
-
-    //let amountValue = 1.5
 
     const txInfo = {
       txIn: cardano.queryUtxo(sender.paymentAddr),
@@ -126,7 +125,9 @@ router.post("/", async (req, res) => {
     const txHash = cardano.transactionSubmit(txSigned);
 
     console.log("SendAssetToClient FINISH");
+    console.log("txHash: ", txHash);
     res.json({ txHash });
+
     console.log("SendAssetToWallet ", txHash);
   } catch (err) {
     return res.status(400).json({ error: err.toString() });
