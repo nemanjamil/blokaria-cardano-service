@@ -2,7 +2,7 @@ name: Node.js MAINNET CI
  
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "testjedan" ]
   workflow_dispatch:
 
 env: 
