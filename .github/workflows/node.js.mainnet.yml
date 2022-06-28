@@ -8,6 +8,7 @@ on:
 env: 
   BLOKARIA_WEBSITE: 'https://mainnet.blokaria.com/'
   RECEIVER_ADDR: 'addr1qykyv7umttswavdj94z4sa6z9nud5c3je0dks90wjyk4aren9vn3r9wfp245xqtd0jvqy4vmenmysxhleylfh8nlpd8sy73f5m'
+  CARDANO_NET_MAGIC: 'mainnet-magic 764824073'
 
 
 jobs:
@@ -28,7 +29,7 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1
       with:
-        envkey_CARDANO_NET_MAGIC: ${{ secrets.CARDANO_TESTNET }}
+        envkey_CARDANO_NET_MAGIC: ${{ env.CARDANO_NET_MAGIC }}
         envkey_BLOKARIA_WEBSITE: ${{ env.BLOKARIA_WEBSITE }} 
         envkey_RECEIVER_ADDR: ${{ env.RECEIVER_ADDR }} 
         file_name: .env
