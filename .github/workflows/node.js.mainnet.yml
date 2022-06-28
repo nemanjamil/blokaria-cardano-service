@@ -8,7 +8,7 @@ on:
 env: 
   BLOKARIA_WEBSITE: 'https://mainnet.blokaria.com/'
   RECEIVER_ADDR: 'addr1qykyv7umttswavdj94z4sa6z9nud5c3je0dks90wjyk4aren9vn3r9wfp245xqtd0jvqy4vmenmysxhleylfh8nlpd8sy73f5m'
-  CARDANO_NET_MAGIC: 'mainnet-magic 764824073'
+  CARDANO_NET_MAGIC: 'BLABLAmainnet-magic 764824073'
 
 
 jobs:
@@ -49,7 +49,7 @@ jobs:
         username: 'admin'
         key: ${{ secrets.SSH_KEY }}
         port: 22
-        source: .
+        source: "."
         target: "/opt/cardano/cardano_plain_express"
         
     - name: Restart Service
