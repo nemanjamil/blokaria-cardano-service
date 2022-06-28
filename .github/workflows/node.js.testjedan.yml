@@ -1,4 +1,4 @@
-name: Node.js TESTNET CI
+name: Node.js TESTJEDAN CI
 
 on:
   push:
