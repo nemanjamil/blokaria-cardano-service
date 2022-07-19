@@ -19,6 +19,10 @@ app.use('/checkWallet', checkWallet);
 app.use('/generateTransaction', walletToWalletTx);
 //app.use('/sendAssetToWallet', sendAssetToWallet);
 
+app.post('/healthCheck', (req, res) => {
+    console.log("healthCheck")
+    res.send('Hello World!')
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
