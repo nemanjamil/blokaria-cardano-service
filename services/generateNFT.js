@@ -12,6 +12,8 @@ const bodySchema = Joi.object({
   authors: Joi.array().optional().allow(""),
   copyright: Joi.string().optional().allow(""),
   walletName: Joi.string().min(3).max(100).required(),
+  additionalMetaData: Joi.array.required(),
+  storedIntoDb: Joi.object.required(),
   dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
 
@@ -36,10 +38,15 @@ router.post("/", async (req, res) => {
     let authors = body.authors;
     let copyright = body.copyright;
     let walletName = body.walletName;
+    let storedIntoDb = body.storedIntoDb;
+    let additionalMetaData = body.additionalMetaData;
+
 
     //res.json({imageIPFS,authors})
 
     console.log("GenerateNft Cardano Wallet Name", walletName);
+    console.log("StoredIntoDb", storedIntoDb);
+    console.log("AdditionalMetaData", additionalMetaData);
 
     const wallet = cardano.wallet(walletName);
 
@@ -95,6 +102,13 @@ router.post("/", async (req, res) => {
         },
       },
     };
+
+
+    additionalMetaData.map((element) => {
+      let m = Object.entries(element)
+      metadata[721][POLICY_ID][ASSET_NAME][m[0][0]] = m[0][1]
+    });
+
 
     console.log("GenerateNft metadata ", metadata);
     // 7. Define transaction
