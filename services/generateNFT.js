@@ -12,8 +12,8 @@ const bodySchema = Joi.object({
   authors: Joi.array().optional().allow(""),
   copyright: Joi.string().optional().allow(""),
   walletName: Joi.string().min(3).max(100).required(),
-  additionalMetaData: Joi.array.required(),
-  storedIntoDb: Joi.object.required(),
+  additionalMetaData: Joi.array().required(),
+  storedIntoDb: Joi.object().required(),
   dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
 
