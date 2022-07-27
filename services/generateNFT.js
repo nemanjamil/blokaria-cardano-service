@@ -165,9 +165,7 @@ router.post("/", async (req, res) => {
 
     console.log("GenerateNft txHash ", txHash);
 
-    console.log(
-      "\n\n GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet \n\n"
-    );
+    console.log("GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet");
     //res.send(txHash)
     res.json({ txHash, assetId: ASSET_ID });
   } catch (err) {
