@@ -10,7 +10,7 @@ const bodySchema = Joi.object({
   assetName: Joi.string().min(3).max(100).required(),
   copyright: Joi.string().optional().allow(""),
   walletName: Joi.string().min(3).max(100).required(),
-  additionalMetaData: Joi.array().required(),
+  additionalMetaData: Joi.object().required(),
   storedIntoDb: Joi.object().required(),
   dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
@@ -94,11 +94,7 @@ router.post("/", async (req, res) => {
       },
     };
 
-
-    additionalMetaData.map((element) => {
-      let m = Object.entries(element)
-      metadata[721][POLICY_ID][ASSET_NAME][m[0][0]] = m[0][1]
-    });
+    metadata[721][POLICY_ID][ASSET_NAME] = { ...metadata[721][POLICY_ID][ASSET_NAME], ...additionalMetaData }
 
 
     console.log("GenerateNft metadata ", metadata);
