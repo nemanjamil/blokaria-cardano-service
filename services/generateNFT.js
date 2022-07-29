@@ -8,8 +8,6 @@ const cardano = require("../config/cardano");
 const bodySchema = Joi.object({
   imageIPFS: Joi.string().min(3).max(100).required(),
   assetName: Joi.string().min(3).max(100).required(),
-  //description: Joi.string().min(3).max(100).required(),
-  //authors: Joi.array().optional().allow(""),
   copyright: Joi.string().optional().allow(""),
   walletName: Joi.string().min(3).max(100).required(),
   additionalMetaData: Joi.array().required(),
@@ -34,8 +32,6 @@ router.post("/", async (req, res) => {
 
     let imageIPFS = body.imageIPFS;
     let assetName = body.assetName;
-    //let description = body.description;
-    //let authors = body.authors;
     let copyright = body.copyright;
     let walletName = body.walletName;
     let storedIntoDb = body.storedIntoDb;
@@ -92,11 +88,6 @@ router.post("/", async (req, res) => {
                 src: imageIPFS,
               },
             ],
-            //type: "image/png",
-            //src: "ipfs://QmUxRuzTi3UZS33rfqXzbD4Heut7zwtGUhuD7qSv7Qt584",
-            // other properties of your choice
-            //authors: authors,
-            //description: description,
             copyright: copyright,
           },
         },
