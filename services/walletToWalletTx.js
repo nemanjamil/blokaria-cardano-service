@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
 
     try {
 
-        console.log("GENERATE wallet to wallet Start \n\n");
+        console.log("\n\n\n GENERATE wallet to wallet BASIC - START \n\n");
 
         await bodySchema.validateAsync(body);
 
@@ -91,7 +91,7 @@ router.post("/", async (req, res) => {
         console.log("walletBalance", walletBalance);
 
         let getAllData = walletBalance.utxo[0].value;
-        console.log("getAllData", getAllData);
+        //console.log("getAllData", getAllData);
         delete getAllData.undefined;
 
         //receiver address
@@ -121,7 +121,7 @@ router.post("/", async (req, res) => {
         };
 
         console.log("\n\n txInfo ");
-        console.dir(txInfo, { depth: null });
+        //console.dir(txInfo, { depth: null });
 
         let raw = cardano.transactionBuildRaw(txInfo);
 

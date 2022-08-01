@@ -18,7 +18,7 @@ router.use((req, res, next) => {
 router.post("/", async (req, res) => {
   const { body } = req;
 
-  console.log("\n\n sendAssetToWallet START \n\n");
+  console.log("\n\n\n SEND ASSET TO WALLET - START \n\n");
   console.log("SendAssetToWallet Payload ", body);
 
   try {
@@ -76,14 +76,14 @@ router.post("/", async (req, res) => {
       ],
     };
 
-    console.log("Original txInfo ", txInfo);
+    //console.log("Original txInfo ", txInfo);
 
     if (numberOfAssets > 2) {
       console.log("Entered Update My Wallet");
       Object.assign(txInfo.txOut[0].value, getAllData);
     }
 
-    console.log("SendAssetToWallet txInfo: ", JSON.stringify(txInfo, null, 4));
+    //console.log("SendAssetToWallet txInfo: ", JSON.stringify(txInfo, null, 4));
 
     // 3. build the transaction
     const raw = cardano.transactionBuildRaw(txInfo);
