@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 
     let walletBalance = sender.balance();
 
-    console.log("walletBalance", walletBalance);
+    //console.log("walletBalance", walletBalance);
 
     let getAllData = walletBalance.utxo[0].value;
 
@@ -96,7 +96,7 @@ router.post("/", async (req, res) => {
       witnessCount: 1,
     });
 
-    console.log("SendAssetToWallet fee ", fee);
+    //console.log("SendAssetToWallet fee ", fee);
 
     // 5. pay the fee by subtracting it from the sender utxo
 
