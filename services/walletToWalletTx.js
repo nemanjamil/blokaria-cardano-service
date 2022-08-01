@@ -88,7 +88,7 @@ router.post("/", async (req, res) => {
         console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
 
         let walletBalance = sender.balance();
-        console.log("walletBalance", walletBalance);
+        //console.log("walletBalance", walletBalance);
 
         let getAllData = walletBalance.utxo[0].value;
         //console.log("getAllData", getAllData);
@@ -99,7 +99,7 @@ router.post("/", async (req, res) => {
         const receiver = process.env.RECEIVER_ADDR;
 
         getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
-        console.log("getAllData ", getAllData);
+        //console.log("getAllData ", getAllData);
 
         let metaDataObjPayload = {
             [rndBr]: metaDataObj,
@@ -154,6 +154,7 @@ router.post("/", async (req, res) => {
         //broadcast transaction
         let txHash = cardano.transactionSubmit(txSigned);
         console.log("cardano.transactionSubmit DONE: " + txHash);
+        console.log("\n\n\n ---------------  \n\n\n");
 
         res.json({ rndBr, txHash });
     } catch (err) {
