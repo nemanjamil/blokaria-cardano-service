@@ -182,8 +182,8 @@ const generateMetaDataPlain = (qrCodeDbData) => {
     qrCodeDbData.clientemailcb ? finalArray["ClientEmail"] = qrCodeDbData.clientEmail : "";
     finalArray["ClientMessage"] = qrCodeDbData.clientMessage;
 
-    finalArray["WebSiteParams"] = `/status/${qrCodeDbData.walletQrId}`;
-    finalArray["WebSiteDomain"] = process.env.BLOKARIA_WEBSITE;
+    //finalArray["WebSiteParams"] = ``;
+    finalArray["WebSite"] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData._id}`;
     finalArray["InternalCode"] = qrCodeDbData.walletQrId;
 
     qrCodeDbData.contributorData ? finalArray["Contributor"] = qrCodeDbData.contributorData : "";
