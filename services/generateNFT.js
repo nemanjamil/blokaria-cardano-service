@@ -79,13 +79,13 @@ router.post("/", async (req, res) => {
         [POLICY_ID]: {
           [ASSET_NAME]: {
             name: ASSET_NAME,
-            image: imageIPFSFull,
+            image: imageIPFS,
             mediaType: "image/jpeg",
             files: [
               {
                 mediaType: "image/jpeg",
                 name: ASSET_NAME,
-                src: imageIPFSFull,
+                src: imageIPFS,
               },
             ],
             copyright: copyright,
