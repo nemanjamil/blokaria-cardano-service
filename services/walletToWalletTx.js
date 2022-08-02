@@ -18,6 +18,7 @@ const bodySchema = Joi.object({
     clientName: Joi.string().max(60).optional().allow(""),
 
     walletQrId: Joi.string().max(60).required(),
+    qrCodeId: Joi.string().max(60).required(),
 
     contributorData: Joi.string().max(60).optional().allow(""),
     clientemailcb: Joi.boolean(),
@@ -57,6 +58,7 @@ router.post("/", async (req, res) => {
             clientName: body.clientName,
 
             walletQrId: body.walletQrId,
+            qrCodeId: body.qrCodeId,
 
             contributorData: body.contributorData,
             clientemailcb: body.clientemailcb,
@@ -183,7 +185,7 @@ const generateMetaDataPlain = (qrCodeDbData) => {
     finalArray["ClientMessage"] = qrCodeDbData.clientMessage;
 
     //finalArray["WebSiteParams"] = ``;
-    finalArray["WebSite"] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData._id}`;
+    finalArray["WebSite"] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.qrCodeId}`;
     finalArray["InternalCode"] = qrCodeDbData.walletQrId;
 
     qrCodeDbData.contributorData ? finalArray["Contributor"] = qrCodeDbData.contributorData : "";
