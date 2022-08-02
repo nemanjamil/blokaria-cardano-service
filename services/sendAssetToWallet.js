@@ -87,7 +87,7 @@ router.post("/", async (req, res) => {
 
     // 3. build the transaction
     const raw = cardano.transactionBuildRaw(txInfo);
-    console.log("SendAssetToWallet raw ");
+    console.log("SendAssetToWallet raw");
 
     // 4. calculate the fee
     const fee = cardano.transactionCalculateMinFee({
@@ -107,7 +107,7 @@ router.post("/", async (req, res) => {
 
     txInfo.txOut[0].value.lovelace -= fee;
 
-    console.log(JSON.stringify(txInfo, null, 4));
+    //console.log(JSON.stringify(txInfo, null, 4));
 
     const tx = cardano.transactionBuildRaw({ ...txInfo, fee });
 
