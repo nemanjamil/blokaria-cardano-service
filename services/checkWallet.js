@@ -25,7 +25,6 @@ router.post('/', async (req, res) => {
         const walletscript = cardano.wallet(walletName)
 
         console.log("Prosao WalletScript", walletscript)
-        console.log("Prosao WalletScript stringify", JSON.stringify(walletscript, null, 4))
 
         res.json({
             "balance": walletscript.balance(),
