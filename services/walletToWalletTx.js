@@ -18,6 +18,7 @@ const bodySchema = Joi.object({
     clientName: Joi.string().max(60).optional().allow(""),
 
     walletQrId: Joi.string().max(60).required(),
+    qrCodeId: Joi.string().max(60).required(),
 
     contributorData: Joi.string().max(60).optional().allow(""),
     clientemailcb: Joi.boolean(),
@@ -39,7 +40,7 @@ router.post("/", async (req, res) => {
 
     try {
 
-        console.log("GENERATE wallet to wallet Start \n\n");
+        console.log("\n\n\n GENERATE wallet to wallet BASIC - START \n\n");
 
         await bodySchema.validateAsync(body);
 
@@ -57,6 +58,7 @@ router.post("/", async (req, res) => {
             clientName: body.clientName,
 
             walletQrId: body.walletQrId,
+            qrCodeId: body.qrCodeId,
 
             contributorData: body.contributorData,
             clientemailcb: body.clientemailcb,
@@ -88,10 +90,10 @@ router.post("/", async (req, res) => {
         console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
 
         let walletBalance = sender.balance();
-        console.log("walletBalance", walletBalance);
+        //console.log("walletBalance", walletBalance);
 
         let getAllData = walletBalance.utxo[0].value;
-        console.log("getAllData", getAllData);
+        //console.log("getAllData", getAllData);
         delete getAllData.undefined;
 
         //receiver address
@@ -99,7 +101,7 @@ router.post("/", async (req, res) => {
         const receiver = process.env.RECEIVER_ADDR;
 
         getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
-        console.log("getAllData ", getAllData);
+        //console.log("getAllData ", getAllData);
 
         let metaDataObjPayload = {
             [rndBr]: metaDataObj,
@@ -121,7 +123,7 @@ router.post("/", async (req, res) => {
         };
 
         console.log("\n\n txInfo ");
-        console.dir(txInfo, { depth: null });
+        //console.dir(txInfo, { depth: null });
 
         let raw = cardano.transactionBuildRaw(txInfo);
 
@@ -154,6 +156,7 @@ router.post("/", async (req, res) => {
         //broadcast transaction
         let txHash = cardano.transactionSubmit(txSigned);
         console.log("cardano.transactionSubmit DONE: " + txHash);
+        console.log("\n\n\n ---------------  \n\n\n");
 
         res.json({ rndBr, txHash });
     } catch (err) {
@@ -181,8 +184,8 @@ const generateMetaDataPlain = (qrCodeDbData) => {
     qrCodeDbData.clientemailcb ? finalArray["ClientEmail"] = qrCodeDbData.clientEmail : "";
     finalArray["ClientMessage"] = qrCodeDbData.clientMessage;
 
-    finalArray["WebSiteParams"] = `/status/${qrCodeDbData.walletQrId}`;
-    finalArray["WebSiteDomain"] = process.env.BLOKARIA_WEBSITE;
+    //finalArray["WebSiteParams"] = ``;
+    finalArray["WebSite"] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.qrCodeId}`;
     finalArray["InternalCode"] = qrCodeDbData.walletQrId;
 
     qrCodeDbData.contributorData ? finalArray["Contributor"] = qrCodeDbData.contributorData : "";

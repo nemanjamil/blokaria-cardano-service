@@ -18,7 +18,7 @@ router.use((req, res, next) => {
 router.post("/", async (req, res) => {
   const { body } = req;
 
-  console.log("\n\n sendAssetToWallet START \n\n");
+  console.log("\n\n\n SEND ASSET TO WALLET - START \n\n");
   console.log("SendAssetToWallet Payload ", body);
 
   try {
@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 
     let walletBalance = sender.balance();
 
-    console.log("walletBalance", walletBalance);
+    //console.log("walletBalance", walletBalance);
 
     let getAllData = walletBalance.utxo[0].value;
 
@@ -76,18 +76,18 @@ router.post("/", async (req, res) => {
       ],
     };
 
-    console.log("Original txInfo ", txInfo);
+    //console.log("Original txInfo ", txInfo);
 
     if (numberOfAssets > 2) {
       console.log("Entered Update My Wallet");
       Object.assign(txInfo.txOut[0].value, getAllData);
     }
 
-    console.log("SendAssetToWallet txInfo: ", JSON.stringify(txInfo, null, 4));
+    //console.log("SendAssetToWallet txInfo: ", JSON.stringify(txInfo, null, 4));
 
     // 3. build the transaction
     const raw = cardano.transactionBuildRaw(txInfo);
-    console.log("SendAssetToWallet raw ", raw);
+    console.log("SendAssetToWallet raw");
 
     // 4. calculate the fee
     const fee = cardano.transactionCalculateMinFee({
@@ -96,7 +96,7 @@ router.post("/", async (req, res) => {
       witnessCount: 1,
     });
 
-    console.log("SendAssetToWallet fee ", fee);
+    //console.log("SendAssetToWallet fee ", fee);
 
     // 5. pay the fee by subtracting it from the sender utxo
 
@@ -107,7 +107,7 @@ router.post("/", async (req, res) => {
 
     txInfo.txOut[0].value.lovelace -= fee;
 
-    console.log(JSON.stringify(txInfo, null, 4));
+    //console.log(JSON.stringify(txInfo, null, 4));
 
     const tx = cardano.transactionBuildRaw({ ...txInfo, fee });
 

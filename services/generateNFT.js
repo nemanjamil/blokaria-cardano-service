@@ -8,11 +8,9 @@ const cardano = require("../config/cardano");
 const bodySchema = Joi.object({
   imageIPFS: Joi.string().min(3).max(100).required(),
   assetName: Joi.string().min(3).max(100).required(),
-  description: Joi.string().min(3).max(100).required(),
-  authors: Joi.array().optional().allow(""),
   copyright: Joi.string().optional().allow(""),
   walletName: Joi.string().min(3).max(100).required(),
-  additionalMetaData: Joi.array().required(),
+  additionalMetaData: Joi.object().required(),
   storedIntoDb: Joi.object().required(),
   dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
@@ -34,8 +32,6 @@ router.post("/", async (req, res) => {
 
     let imageIPFS = body.imageIPFS;
     let assetName = body.assetName;
-    let description = body.description;
-    let authors = body.authors;
     let copyright = body.copyright;
     let walletName = body.walletName;
     let storedIntoDb = body.storedIntoDb;
@@ -84,7 +80,6 @@ router.post("/", async (req, res) => {
           [ASSET_NAME]: {
             name: ASSET_NAME,
             image: imageIPFS,
-            description: description,
             mediaType: "image/jpeg",
             files: [
               {
@@ -93,21 +88,13 @@ router.post("/", async (req, res) => {
                 src: imageIPFS,
               },
             ],
-            //type: "image/png",
-            //src: "ipfs://QmUxRuzTi3UZS33rfqXzbD4Heut7zwtGUhuD7qSv7Qt584",
-            // other properties of your choice
-            authors: authors,
             copyright: copyright,
           },
         },
       },
     };
 
-
-    additionalMetaData.map((element) => {
-      let m = Object.entries(element)
-      metadata[721][POLICY_ID][ASSET_NAME][m[0][0]] = m[0][1]
-    });
+    metadata[721][POLICY_ID][ASSET_NAME] = { ...metadata[721][POLICY_ID][ASSET_NAME], ...additionalMetaData }
 
 
     console.log("GenerateNft metadata ", metadata);
