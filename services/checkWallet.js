@@ -11,7 +11,7 @@ const bodySchema = Joi.object({
 router.post('/', async (req, res) => {
 
     const { body } = req;
-    console.log("Body START CHECK WALLET: ", body)
+    console.log("Body START CHECK WALLET - HIT: ", body)
 
     console.log('Cardano process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
 
