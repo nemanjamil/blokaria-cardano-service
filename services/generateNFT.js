@@ -66,13 +66,13 @@ router.post("/", async (req, res) => {
       .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
       .join("");
 
-    console.log("ASSET_NAME_HEX ", ASSET_NAME_HEX);
+    console.log("5. ASSET_NAME_HEX ", ASSET_NAME_HEX);
 
     // 5. Create ASSET_ID
     const ASSET_ID = POLICY_ID + "." + ASSET_NAME_HEX;
     const imageIPFSFull = "ipfs://" + imageIPFS;
 
-    console.log("GenerateNft ASSET_ID ", ASSET_ID);
+    console.log("6. GenerateNft ASSET_ID ", ASSET_ID);
     // 6. Define metadata
     const metadata = {
       721: {
@@ -97,7 +97,7 @@ router.post("/", async (req, res) => {
     metadata[721][POLICY_ID][ASSET_NAME] = { ...metadata[721][POLICY_ID][ASSET_NAME], ...additionalMetaData }
 
 
-    console.log("GenerateNft metadata ", metadata);
+    console.log("7. GenerateNft metadata ", metadata);
     // 7. Define transaction
     const tx = {
       txIn: wallet.balance().utxo,
@@ -113,6 +113,9 @@ router.post("/", async (req, res) => {
       metadata,
       witnessCount: 2,
     };
+
+    console.log("8. GenerateNft tx.txIn ", tx.txIn);
+    console.log("9. GenerateNft tx.txOut ", tx.txOut);
 
     if (
       Object.keys(tx.txOut[0].value).includes("undefined") ||
