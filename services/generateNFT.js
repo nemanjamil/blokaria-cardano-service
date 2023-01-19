@@ -119,7 +119,7 @@ router.post("/", async (req, res) => {
 
     if (
       Object.keys(tx.txOut[0].value).includes("undefined") ||
-      Object.keys(tx.txIn[0].value.includes("undefinded"))
+      Object.keys(tx.txIn[0].value).includes("undefinded")
     ) {
       delete tx.txOut[0].value.undefined;
       delete tx.txIn[0].value.undefined;
