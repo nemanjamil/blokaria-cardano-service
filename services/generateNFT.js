@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   console.log("GenerateNft Payload ", body);
 
   try {
-    console.log("GENERATE NFT START \n\n");
+    console.log("GENERATE NFT START - POCEO \n\n");
     const value = await bodySchema.validateAsync(body);
 
     console.log("Successfull Validation");
