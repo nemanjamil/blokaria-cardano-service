@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   console.log("GenerateNft Payload ", body);
 
   try {
-    console.log("GENERATE NFT Start \n\n");
+    console.log("GENERATE NFT START \n\n");
     const value = await bodySchema.validateAsync(body);
 
     console.log("Successfull Validation");
@@ -66,13 +66,13 @@ router.post("/", async (req, res) => {
       .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
       .join("");
 
-    console.log("ASSET_NAME_HEX ", ASSET_NAME_HEX);
+    console.log("5. ASSET_NAME_HEX ", ASSET_NAME_HEX);
 
     // 5. Create ASSET_ID
     const ASSET_ID = POLICY_ID + "." + ASSET_NAME_HEX;
     const imageIPFSFull = "ipfs://" + imageIPFS;
 
-    console.log("GenerateNft ASSET_ID ", ASSET_ID);
+    console.log("6. GenerateNft ASSET_ID ", ASSET_ID);
     // 6. Define metadata
     const metadata = {
       721: {
@@ -97,7 +97,7 @@ router.post("/", async (req, res) => {
     metadata[721][POLICY_ID][ASSET_NAME] = { ...metadata[721][POLICY_ID][ASSET_NAME], ...additionalMetaData }
 
 
-    console.log("GenerateNft metadata ", metadata);
+    console.log("7. GenerateNft metadata ", metadata);
     // 7. Define transaction
     const tx = {
       txIn: wallet.balance().utxo,
@@ -114,13 +114,18 @@ router.post("/", async (req, res) => {
       witnessCount: 2,
     };
 
+    console.log("8. GenerateNft tx.txIn ", tx.txIn);
+    console.log("9. GenerateNft tx.txOut ", tx.txOut);
+
     if (
       Object.keys(tx.txOut[0].value).includes("undefined") ||
-      Object.keys(tx.txIn[0].value.includes("undefinded"))
+      Object.keys(tx.txIn[0].value).includes("undefinded")
     ) {
       delete tx.txOut[0].value.undefined;
       delete tx.txIn[0].value.undefined;
     }
+
+    console.log("10. Pass OK ");
 
     // 8. Build transaction
     const buildTransaction = (tx) => {
@@ -134,7 +139,7 @@ router.post("/", async (req, res) => {
     };
     const raw = buildTransaction(tx);
 
-    console.log("GenerateNft raw ", raw);
+    console.log("11. GenerateNft raw ", raw);
     // 9. Sign transaction
     const signTransaction = (wallet, tx) => {
       console.log("wallet.payment.skey", wallet.payment.skey);
@@ -146,13 +151,13 @@ router.post("/", async (req, res) => {
 
     const signed = signTransaction(wallet, raw);
 
-    console.log("GenerateNft signed ", signed);
+    console.log("12. GenerateNft signed ", signed);
     // 10. Submit transaction
     const txHash = await cardano.transactionSubmit(signed);
 
-    console.log("GenerateNft txHash ", txHash);
+    console.log("13. GenerateNft txHash ", txHash);
 
-    console.log("GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet");
+    console.log("14. GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet");
     //res.send(txHash)
     res.json({ txHash, assetId: ASSET_ID });
   } catch (err) {
