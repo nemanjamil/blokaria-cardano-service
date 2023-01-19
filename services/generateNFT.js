@@ -6,15 +6,15 @@ const cardano = require("../config/cardano");
 // app.use(express.json())
 
 const bodySchema = Joi.object({
-  imageIPFS: Joi.string().min(3).max(100).required().messages({ "any.required": "imageIPFS" }),
-  assetName: Joi.string().min(3).max(100).required().messages({ "any.required": "assetName" }),
-  copyright: Joi.string().optional().allow("").messages({ "any.required": "copyright" }),
-  walletName: Joi.string().min(3).max(100).required().messages({ "any.required": "walletName" }),
-  additionalMetaData: Joi.object().required().messages({ "any.required": "additionalMetaData" }),
-  storedIntoDb: Joi.object().required().messages({ "any.required": "storedIntoDb" }),
-  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional().messages({ "any.required": "dalayCallToWalletAsset" }),
+  imageIPFS: Joi.string().min(3).max(100).required(),
+  assetName: Joi.string().min(3).max(100).required(),
+  copyright: Joi.string().optional().allow(""),
+  walletName: Joi.string().min(3).max(100).required(),
+  additionalMetaData: Joi.object().required(),
+  storedIntoDb: Joi.object().required(),
+  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
-//.messages({ "any.required": "You must tells us your age" })
+
 router.use((req, res, next) => {
   console.log("Time generateNFT: ", Date.now());
   next();
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   console.log("GenerateNft Payload ", body);
 
   try {
-    console.log("GENERATE NFT START - POCEO \n\n");
+    console.log("GENERATE NFT START \n\n");
     const value = await bodySchema.validateAsync(body);
 
     console.log("Successfull Validation");
