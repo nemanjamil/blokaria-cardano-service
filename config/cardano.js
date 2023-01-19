@@ -1,7 +1,7 @@
 const Cardano = require("cardanocli-js")
 
 const cardano = new Cardano({
-    //network: process.env.CARDANO_NET_MAGIC,
+    network: "mainnet",
     dir: "/opt/cardano/cnode",
     shelleyGenesisPath: "/opt/cardano/cnode/files/shelley-genesis.json"
 });
