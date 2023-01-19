@@ -12,7 +12,7 @@ const bodySchema = Joi.object({
   walletName: Joi.string().min(3).max(100).required().label("walletName"),
   additionalMetaData: Joi.object().required().label("additionalMetaData"),
   storedIntoDb: Joi.object().required().label("storedIntoDb"),
-  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional().label("dalayCallToWalletAsset"),
+  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
 });
 
 router.use((req, res, next) => {
