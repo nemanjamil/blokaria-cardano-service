@@ -6,13 +6,13 @@ const cardano = require("../config/cardano");
 // app.use(express.json())
 
 const bodySchema = Joi.object({
-  imageIPFS: Joi.string().min(3).max(100).required(),
-  assetName: Joi.string().min(3).max(100).required(),
-  copyright: Joi.string().optional().allow(""),
-  walletName: Joi.string().min(3).max(100).required(),
-  additionalMetaData: Joi.object().required(),
-  storedIntoDb: Joi.object().required(),
-  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional(),
+  imageIPFS: Joi.string().min(3).max(100).required().label("imageIPFS"),
+  assetName: Joi.string().min(3).max(100).required().label("assetName"),
+  copyright: Joi.string().optional().allow("").label("copyright"),
+  walletName: Joi.string().min(3).max(100).required().label("walletName"),
+  additionalMetaData: Joi.object().required().label("additionalMetaData"),
+  storedIntoDb: Joi.object().required().label("storedIntoDb"),
+  dalayCallToWalletAsset: Joi.number().min(1).max(600000).optional().label("dalayCallToWalletAsset"),
 });
 
 router.use((req, res, next) => {
