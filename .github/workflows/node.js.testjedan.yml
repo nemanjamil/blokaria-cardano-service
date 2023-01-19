@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 env: 
-  BLOKARIA_WEBSITE: 'https://mainnet.blokaria.com/'
+  BLOKARIA_WEBSITE: 'https://blokaria.com/'
   RECEIVER_ADDR: 'addr1qykyv7umttswavdj94z4sa6z9nud5c3je0dks90wjyk4aren9vn3r9wfp245xqtd0jvqy4vmenmysxhleylfh8nlpd8sy73f5m'
-  CARDANO_NET_MAGIC: 'mainnet-magic 764824073'
+  CARDANO_NET_MAGIC: 'mainnet'
 
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         source: '.env'
-        target: '/opt/cardano/cardano_plain_express'
+        target: '/var/www/express-cardano'
     - uses: actions/checkout@master
     - name: Copy file via ssh password
       uses: appleboy/scp-action@master
@@ -50,7 +50,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         source: "."
-        target: "/opt/cardano/cardano_plain_express"
+        target: "/var/www/express-cardano"
         
     - name: Restart Service
       uses: appleboy/ssh-action@master
@@ -60,7 +60,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
-          cd /opt/cardano/cardano_plain_express
+          cd /var/www/express-cardano
           npm install
           pm2 restart app
         

@@ -26,6 +26,10 @@ router.post('/', async (req, res) => {
 
         console.log("Prosao WalletScript", walletscript)
 
+        // walletscript.paymentAddr = walletscript.paymentAddr.trim()
+
+        // console.log("Trim WalletScript", walletscript)
+
         res.json({
             "balance": walletscript.balance(),
             "wallet": walletscript

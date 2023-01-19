@@ -74,19 +74,10 @@ const generateMetaData = (qrCodeDbData) => {
 
     let productLink = {
         k: {
-            string: "WebSiteParams",
+            string: "QrCodeDetails",
         },
         v: {
-            string: `/status/${qrCodeDbData.walletQrId}`,
-        },
-    };
-
-    let webSite = {
-        k: {
-            string: "WebSiteDomain",
-        },
-        v: {
-            string: process.env.BLOKARIA_WEBSITE,
+            string: `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.walletQrId}`,
         },
     };
 
