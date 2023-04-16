@@ -54,7 +54,9 @@ router.post("/", async (req, res) => {
     };
 
     console.log("mS", mintScript);
+
     // 3. Create POLICY_ID
+
     const POLICY_ID = cardano.transactionPolicyid(mintScript);
 
     console.log("GenerateNft P_ID ", POLICY_ID);
