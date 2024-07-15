@@ -1,48 +1,44 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const Joi = require('joi');
-const cardano = require("../config/cardano")
-
+const Joi = require("joi");
+const cardano = require("../config/cardano");
 
 const bodySchema = Joi.object({
-    walletName: Joi.string().min(5).max(100).required(),
-})
+  walletName: Joi.string().min(5).max(100).required(),
+});
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
+  const { body } = req;
+  console.log("Body: ", body);
 
-    const { body } = req;
-    console.log("Body START CHECK WALLET - HIT: ", body)
+  console.log(
+    "Cardano process.env.CARDANO_NET_MAGIC",
+    process.env.CARDANO_NET_MAGIC
+  );
 
-    console.log('Cardano process.env.CARDANO_NET_MAGIC', process.env.CARDANO_NET_MAGIC);
+  try {
+    const value = await bodySchema.validateAsync(body);
 
-    try {
-        const value = await bodySchema.validateAsync(body);
+    let walletName = body.walletName;
 
-        let walletName = body.walletName
+    console.log("walletName: ", walletName);
 
-        console.log("walletName: ", walletName)
+    const walletscript = cardano.wallet(walletName);
 
-        const walletscript = cardano.wallet(walletName)
+    console.log("Prosao WalletScript", walletscript);
 
-        console.log("Prosao WalletScript", walletscript)
+    // walletscript.paymentAddr = walletscript.paymentAddr.trim()
 
-        // walletscript.paymentAddr = walletscript.paymentAddr.trim()
+    // console.log("Trim WalletScript", walletscript)
 
-        // console.log("Trim WalletScript", walletscript)
-
-        res.json({
-            "balance": walletscript.balance(),
-            "wallet": walletscript
-        })
-
-    }
-    catch (err) {
-        console.log(err)
-        return res.status(400).json({ error: err.toString() });
-    }
-
-})
+    res.json({
+      balance: walletscript.balance(),
+      wallet: walletscript,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err.toString() });
+  }
+});
 
 module.exports = router;
-
-
