@@ -1,5 +1,5 @@
 const { CardanoCliJs, CardanoCliJsOptions } = require("cardanocli-js");
-const shelleyGenesisPath = "/opt/cardano/cnode/files/shelley-genesis.json";
+const shelleyGenesisPath = process.env.SHELLEY_GENESIS_PATH;
 const options = new CardanoCliJsOptions({
   shelleyGenesisPath,
   network: 1097911063,
