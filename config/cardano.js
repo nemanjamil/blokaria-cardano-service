@@ -18,6 +18,6 @@ const cardano = new CardanocliJs({
   network: process.env.CARDANO_NET_MAGIC,
   dir: "/opt/cardano/cnode",
   shelleyGenesisPath,
-  socketPath: "/opt/cardano/cnode/sockets",
+  socketPath: "/opt/cardano/cnode/sockets/node.socket",
 });
 module.exports = cardano;
