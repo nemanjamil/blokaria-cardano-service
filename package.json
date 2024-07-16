@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
-    "cardanocli-js": "^4.1.6",
+    "cardanocli-js": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "express-joi-validation": "^5.0.1",
