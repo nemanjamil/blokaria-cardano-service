@@ -1,6 +1,6 @@
-const CardanocliJs = require("cardanocli-js");
+const { CardanoCliJs } = require("cardanocli-js");
 const shelleyGenesisPath = process.env.SHELLEY_GENESIS_PATH;
-const cardano = new CardanocliJs({
+const cardano = new CardanoCliJs({
   network: process.env.CARDANO_NET_MAGIC,
   dir: "/opt/cardano/cnode",
   shelleyGenesisPath,
