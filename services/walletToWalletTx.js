@@ -5,8 +5,18 @@ const Joi = require("joi");
 const cardano = require("../config/cardano");
 
 const fs = require('fs/promises')
+const path = require('path')
 // const wallet = cardano.wallet("BLOKARIA")
 // app.use(express.json())
+
+const getWalletAddress = async (walletName, dir) => {
+    const privAccountDir = `${dir}/priv/wallet/${walletName}`;
+    const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
+
+    const walletAddr = (await fs.readFile(outPaymentAddrFile, { encoding: 'utf-8' })).toString()
+
+    return walletAddr
+}
 
 const bodySchema = Joi.object({
     userDesc: Joi.string().max(60).optional().allow(""),
@@ -88,9 +98,8 @@ router.post("/", async (req, res) => {
 
         console.log("Generate Cardano Wallet Name", walletName);
         // const sender = cardano.wallet(walletName);
-        const paymentAddrFile = cardano.address.build(walletName, {})
-        console.log("Got payment addr file for wallet:", paymentAddrFile)
-        const walletAddr = (await fs.readFile(paymentAddrFile, { encoding: 'utf-8' })).toString()
+        // const paymentAddrFile = cardano.address.build(walletName, {})
+        const walletAddr = getWalletAddress(walletName, "/opt/cardano/cnode")
         console.log("Fetched wallet address by name", walletName, ":", walletAddr)
         const sender = cardano.query.utxo(walletAddr)
         console.log("Wallet sender fetched:", sender)
