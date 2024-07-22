@@ -3,6 +3,8 @@ var express = require("express");
 var router = express.Router();
 const Joi = require("joi");
 const cardano = require("../config/cardano");
+
+const fs = require('fs/promises')
 // const wallet = cardano.wallet("BLOKARIA")
 // app.use(express.json())
 
@@ -85,7 +87,23 @@ router.post("/", async (req, res) => {
         console.log("rndBr: ", rndBr);
 
         console.log("Generate Cardano Wallet Name", walletName);
-        const sender = cardano.wallet(walletName);
+        // const sender = cardano.wallet(walletName);
+        const paymentAddrFile = cardano.address.build(walletName)
+        console.log("Got payment addr file for wallet:", paymentAddrFile)
+        const walletAddr = (await fs.readFile(paymentAddrFile, { encoding: 'utf-8' })).toString()
+        console.log("Fetched wallet address by name", walletName, ":", walletAddr)
+        const sender = cardano.query.utxo(walletAddr)
+        console.log("Wallet sender fetched:", sender)
+        const utxoIds = Object.keys(sender);
+        const value = {}
+        const balance = sender.forEach((utxo) => {
+            Object.keys(utxo.value).forEach((asset) => {
+                if (!value[asset]) value[asset] = 0;
+                value[asset] += utxo.value[asset];
+            });
+        });
+
+        console.log("Balance Value built:", value)
 
         console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
 
