@@ -99,7 +99,7 @@ router.post("/", async (req, res) => {
         console.log("Generate Cardano Wallet Name", walletName);
         // const sender = cardano.wallet(walletName);
         // const paymentAddrFile = cardano.address.build(walletName, {})
-        const walletAddr = getWalletAddress(walletName, "/opt/cardano/cnode")
+        const walletAddr = await getWalletAddress(walletName, "/opt/cardano/cnode")
         console.log("Fetched wallet address by name", walletName, ":", walletAddr)
         const sender = cardano.query.utxo(walletAddr)
         console.log("Wallet sender fetched:", sender)
