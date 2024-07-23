@@ -105,7 +105,7 @@ export class Transaction {
   }
 
   private getQueryTip(): Record<string, any> {
-    const command = `${this.getCliPath()} query tip --${this.getNetwork()}`;
+    const command = `${this.getCliPath()} query tip --${this.getNetwork()} --socket-path ${this.getSocketPath()}`;
     console.log(`[CARDANO_API] Get query tip command:`, command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Get query tip output:", output);
@@ -271,7 +271,7 @@ export class CardanoAPI {
 
   getQueryTip(): Record<string, any> {
     const output = execSync(
-      `${this.getCliPath()} query tip --${this.getNetwork()}`
+      `${this.getCliPath()} query tip --${this.getNetwork()} --socket-path ${this.getSocketPath()}`
     );
     return JSON.parse(output.toString("utf-8"));
   }
