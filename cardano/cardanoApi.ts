@@ -152,7 +152,7 @@ export class Transaction {
 
     const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
       this.amount
-    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
+    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${txIn} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
     console.log("[CARDANO_API] Build smart tx command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Build smart tx output:", output);
