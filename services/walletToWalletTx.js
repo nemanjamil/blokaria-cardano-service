@@ -4,19 +4,9 @@ var router = express.Router();
 const Joi = require("joi");
 const cardano = require("../config/cardano");
 
-const fs = require('fs/promises')
-const path = require('path')
+const { cardanoApi } = require("../cardano/cardanoApi");
 // const wallet = cardano.wallet("BLOKARIA")
 // app.use(express.json())
-
-const getWalletAddress = async (walletName, dir) => {
-    const privAccountDir = `${dir}/priv/wallet/${walletName}`;
-    const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
-
-    const walletAddr = (await fs.readFile(outPaymentAddrFile, { encoding: 'utf-8' })).toString()
-
-    return walletAddr
-}
 
 const bodySchema = Joi.object({
     userDesc: Joi.string().max(60).optional().allow(""),
@@ -99,90 +89,94 @@ router.post("/", async (req, res) => {
         console.log("Generate Cardano Wallet Name", walletName);
         // const sender = cardano.wallet(walletName);
         // const paymentAddrFile = cardano.address.build(walletName, {})
-        const walletAddr = await getWalletAddress(walletName, "/opt/cardano/cnode")
+        const walletAddr = await cardanoApi.getWalletAddr(walletName)
         console.log("Fetched wallet address by name", walletName, ":", walletAddr)
         const sender = cardano.query.utxo(walletAddr)
         console.log("Wallet sender fetched:", sender)
-        const utxoIds = Object.keys(sender);
-        const value = {}
-        const balance = sender.forEach((utxo) => {
-            Object.keys(utxo.value).forEach((asset) => {
-                if (!value[asset]) value[asset] = 0;
-                value[asset] += utxo.value[asset];
-            });
-        });
+        const walletTxIn = Object.keys(sender)[0]
+        const walletBalance = sender[walletTxIn].value.lovelace
 
-        console.log("Balance Value built:", value)
+        console.log("Balance of Sender wallet: " + (walletBalance / 1_000_000) + " ADA");
 
-        console.log("Balance of Sender wallet: " + cardano.toAda(sender.balance().value.lovelace) + " ADA");
-
-        let walletBalance = sender.balance();
         //console.log("walletBalance", walletBalance);
 
-        let getAllData = walletBalance.utxo[0].value;
-        //console.log("getAllData", getAllData);
-        delete getAllData.undefined;
+        // let getAllData = walletBalance.utxo[0].value;
+        // console.log("getAllData", getAllData);
+        // delete getAllData.undefined;
 
         //receiver address
         console.log("RECEIVER_ADDR ", process.env.RECEIVER_ADDR);
         const receiver = process.env.RECEIVER_ADDR;
 
-        getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
-        //console.log("getAllData ", getAllData);
+        // getAllData.lovelace = sender.balance().value.lovelace - cardano.toLovelace(amountValue)
 
         let metaDataObjPayload = {
             [rndBr]: metaDataObj,
         };
+
         console.log("\n\n metaDataObjPayload");
         console.dir(metaDataObjPayload, { depth: null });
 
-        let txInfo = {
-            txIn: cardano.queryUtxo(sender.paymentAddr),
-            txOut: [
-                {
-                    address: sender.paymentAddr,
-                    value: getAllData,
-                },
-                { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
-            ],
-            // withdrawal: "self", PROVERITI DA LI RADI - Ovo znaci da skida pare omah sa sendera, odnosno ne salje pare receiveru 1ada
-            metadata: metaDataObjPayload,
-        };
+        const transaction = cardanoApi.createTransaction({
+            amount: amountValue * 1_000_000, // to lovelace
+            txIn: walletTxIn,
+            txOut: receiver,
+            walletName: walletName,
+            metadata: metaDataObjPayload
+        })
 
-        console.log("\n\n txInfo ");
-        //console.dir(txInfo, { depth: null });
+        console.log("Transaction Created:", transaction)
 
-        let raw = cardano.transactionBuildRaw(txInfo);
+        console.log("Started building transaction")
 
-        console.log("raw ", raw);
+        const finalTx = await transaction.build()
+
+        console.log(`Built transaction file with fee at '${finalTx.getPath()}'`)
+
+        console.log("\nStarted signing transaction")
+
+        const signedTx = transaction.sign(finalTx)
+
+        console.log(`Signed transaction and saved at '${signedTx}'`)
+
+        console.log("\nStarted submitting transaction")
+
+        const txHash = transaction.submit()
+
+        console.log("Submitted transaction successfully with hash:", txHash)
+
+        // let txInfo = {
+        //     txIn: cardano.queryUtxo(sender.paymentAddr),
+        //     txOut: [
+        //         {
+        //             address: sender.paymentAddr,
+        //             value: getAllData,
+        //         },
+        //         { address: receiver, value: { lovelace: cardano.toLovelace(amountValue) } }, //value going to receiver
+        //     ],
+        //     // withdrawal: "self", PROVERITI DA LI RADI - Ovo znaci da skida pare omah sa sendera, odnosno ne salje pare receiveru 1ada
+        //     metadata: metaDataObjPayload,
+        // };
+
+        // let raw = cardano.transactionBuildRaw(txInfo);
+
+        // console.log("raw ", raw);
         //calculate fee
-        let fee = cardano.transactionCalculateMinFee({
-            ...txInfo,
-            txBody: raw,
-            witnessCount: 1,
-        });
+        // let fee = cardano.transactionCalculateMinFee({
+        //     ...txInfo,
+        //     txBody: raw,
+        //     witnessCount: 1,
+        // });
 
         //pay the fee by subtracting it from the sender utxo
-        txInfo.txOut[0].value.lovelace -= fee;
-        console.log('txInfo.txOut[0].value.lovelace', txInfo.txOut[0].value.lovelace);
+        // txInfo.txOut[0].value.lovelace -= fee;
+        // console.log('txInfo.txOut[0].value.lovelace', txInfo.txOut[0].value.lovelace);
 
 
         //create final transaction
-        let tx = cardano.transactionBuildRaw({ ...txInfo, fee });
+        // let tx = cardano.transactionBuildRaw({ ...txInfo, fee });
 
-        console.log('cardano.transactionBuildRaw DONE');
-
-        //sign the transaction
-        let txSigned = cardano.transactionSign({
-            txBody: tx,
-            signingKeys: [sender.payment.skey],
-        });
-
-        console.log('cardano.transactionSign DONE');
-
-        //broadcast transaction
-        let txHash = cardano.transactionSubmit(txSigned);
-        console.log("cardano.transactionSubmit DONE: " + txHash);
+        console.log("cardano.transactionSubmit DONE: ");
         console.log("\n\n\n ---------------  \n\n\n");
 
         res.json({ rndBr, txHash });
