@@ -138,7 +138,7 @@ router.post("/", async (req, res) => {
 
         console.log("\nStarted signing transaction")
 
-        const signedTx = transaction.sign(finalTx)
+        const signedTx = await transaction.sign(finalTx)
 
         console.log(`Signed transaction and saved at '${signedTx.getPath()}'`)
 

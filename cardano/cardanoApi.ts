@@ -163,14 +163,14 @@ export class Transaction {
     return outFile;
   }
 
-  sign(txFile: TxFile): TxFile {
+  async sign(txFile: TxFile): Promise<TxFile> {
     const signedFile = new TxFile(".signed");
     const paymentKeyPath = this.getWalletPaymentKeyPath();
     const command = `${this.getCliPath()} transaction sign --tx-body-file ${txFile.getPath()} --signing-key-file ${paymentKeyPath} --${this.getNetwork()} --out-file ${signedFile.getPath()}`;
     console.log("[CARDANO_API] Sign tx command:", command);
     const output = execSync(command);
     console.log("[CARDANO_API] Sign tx output:", output.toString("utf-8"));
-    txFile.unload();
+    await txFile.unload();
     return signedFile;
   }
 
