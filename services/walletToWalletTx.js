@@ -91,7 +91,7 @@ router.post("/", async (req, res) => {
         // const paymentAddrFile = cardano.address.build(walletName, {})
         const walletAddr = await cardanoApi.getWalletAddr(walletName)
         console.log("Fetched wallet address by name", walletName, ":", walletAddr)
-        const sender = cardano.query.utxo(walletAddr)
+        const sender = cardanoApi.queryUtxo(walletAddr)
         console.log("Wallet sender fetched:", sender)
         const walletTxIn = Object.keys(sender)[0]
         const walletBalance = sender[walletTxIn].value.lovelace
