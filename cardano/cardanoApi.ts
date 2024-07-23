@@ -137,11 +137,27 @@ export class Transaction {
 
   async build(): Promise<TxFile> {
     const draft = await this.draftTransaction();
-    // const fee = this.calculateTransactionFee(draft, 1);
-    draft.unload();
-    const fee = 100000;
+    const fee = this.calculateTransactionFee(draft, 1);
+    // const fee = 100000;
     // this.amount -= fee;
     return await this.finalRawTransaction(fee, 1000);
+  }
+
+  buildV2(): TxFile {
+    const txIn = this.options.txIn;
+    const txOut = this.options.txOut;
+    const invalidHereAfter = this.getQueryTip().slot + 10000;
+    const invalidBefore = 0;
+    const outFile = new TxFile(".raw");
+
+    const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out ${txOut} ${
+      this.amount
+    } --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
+    console.log("[CARDANO_API] Build smart tx command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Build smart tx output:", output);
+
+    return outFile;
   }
 
   sign(txFile: TxFile): TxFile {

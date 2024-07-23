@@ -129,7 +129,7 @@ router.post("/", async (req, res) => {
 
         console.log("Started building transaction")
 
-        const finalTx = await transaction.build()
+        const finalTx = await transaction.buildV2()
 
         console.log(`Built transaction file with fee at '${finalTx.getPath()}'`)
 
