@@ -195,7 +195,7 @@ export class Transaction {
   ): number {
     const protocolFile = this.getProtocolParams();
     console.log(`[CARDANO_API] Protocol file at '${protocolFile.getPath()}'`);
-    const command = `${this.getCliPath()} transaction calculate-min-fee --tx-body-file ${txFile.getPath()} --witness-count ${witnessCount} --${this.getNetwork()} --protocol-file-params ${protocolFile.getPath()}`;
+    const command = `${this.getCliPath()} transaction calculate-min-fee --tx-body-file ${txFile.getPath()} --witness-count ${witnessCount} --${this.getNetwork()} --protocol-params-file ${protocolFile.getPath()}`;
     console.log("[CARDANO_API] Executing draft tx:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Calculate tx fee output:", output);
