@@ -274,8 +274,8 @@ export class CardanoAPI {
   }
 
   private genWalletPaymentKeys(walletName: string, walletDir: string) {
-    const paymentVkey = path.join(walletDir, `${walletName}.payment.vkey`);
-    const paymentSkey = path.join(walletDir, `${walletName}.payment.skey`);
+    const paymentVkey = path.join(walletDir, `payment.vkey`);
+    const paymentSkey = path.join(walletDir, `payment.skey`);
     const command = `${this.getCliPath()} address key-gen --verification-key-file ${paymentVkey} --signing-key-file ${paymentSkey}`;
     console.log("[CARDANO_API] Key gen wallet payment command:", command);
     const output = execSync(command).toString("utf-8");
@@ -283,8 +283,8 @@ export class CardanoAPI {
   }
 
   private genWalletStakeKeys(walletName: string, walletDir: string) {
-    const stakeVkey = path.join(walletDir, `${walletName}.stake.vkey`);
-    const stakeSkey = path.join(walletDir, `${walletName}.stake.skey`);
+    const stakeVkey = path.join(walletDir, `stake.vkey`);
+    const stakeSkey = path.join(walletDir, `stake.skey`);
     const command = `${this.getCliPath()} stake-address key-gen --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
     console.log("[CARDANO_API] Key gen wallet stake command:", command);
     const output = execSync(command).toString("utf-8");
@@ -296,11 +296,11 @@ export class CardanoAPI {
     walletDir: string,
     outFilePath: string
   ) {
-    const paymentVkey = path.join(walletDir, `${walletName}.payment.vkey`);
+    const paymentVkey = path.join(walletDir, `payment.vkey`);
     if (!fsSync.existsSync(paymentVkey)) {
       this.genWalletPaymentKeys(walletName, walletDir);
     }
-    const stakeVkey = path.join(walletDir, `${walletName}.stake.vkey`);
+    const stakeVkey = path.join(walletDir, `stake.vkey`);
     if (!fsSync.existsSync(stakeVkey)) {
       this.genWalletStakeKeys(walletName, walletDir);
     }
@@ -314,8 +314,8 @@ export class CardanoAPI {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
     const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
 
-    const paymentVkey = path.join(privAccountDir, `${walletName}.payment.vkey`);
-    const stakeVkey = path.join(privAccountDir, `${walletName}.stake.vkey`);
+    const paymentVkey = path.join(privAccountDir, `payment.vkey`);
+    const stakeVkey = path.join(privAccountDir, `stake.vkey`);
 
     if (
       !fsSync.existsSync(outPaymentAddrFile) ||
