@@ -274,7 +274,7 @@ export class CardanoAPI {
 
   async getWalletAddr(walletName: string): Promise<string> {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
-    const outPaymentAddrFile = `${privAccountDir}/payment.addr`;
+    const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
 
     const walletAddr = (
       await fs.readFile(outPaymentAddrFile, { encoding: "utf-8" })
