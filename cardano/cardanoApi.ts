@@ -117,7 +117,7 @@ export class Transaction {
   private getWalletPaymentKeyPath(): string {
     console.log("[CARDANO_API] Get wallet payment key path start");
     const privAccountDir = `${this.options.dir}/priv/wallet/${this.options.walletName}`;
-    const outPaymentKeyFile = `${privAccountDir}/${this.options.walletName}.payment.skey`;
+    const outPaymentKeyFile = `${privAccountDir}/payment.skey`;
     console.log(
       `[CARDANO_API] Get wallet payment key path is '${outPaymentKeyFile}'`
     );
