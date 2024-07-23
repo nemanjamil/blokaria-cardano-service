@@ -8,7 +8,7 @@ interface CardanoApiOptions {
   era?: string;
   dir: string;
   cliPath?: string;
-  socketPath?: string;
+  socketPath: string;
   shelleyGenesisPath: string;
 }
 
@@ -241,6 +241,10 @@ export class CardanoAPI {
       : "mainnet";
   }
 
+  private getSocketPath(): string {
+    return this.options.socketPath;
+  }
+
   async getWalletAddr(walletName: string): Promise<string> {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
     const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
@@ -253,7 +257,7 @@ export class CardanoAPI {
   }
 
   queryUtxo(address: string): Record<string, any> {
-    const command = `${this.getCliPath()} query utxo --address ${address} --${this.getNetwork()} --output-json`;
+    const command = `${this.getCliPath()} query utxo --address ${address} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --output-json`;
     console.log("[CARDANO_API] Query UTXO command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Query UTXO output:", output);
