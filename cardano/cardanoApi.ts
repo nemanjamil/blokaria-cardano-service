@@ -1,7 +1,8 @@
-import { CardanoCliJs, CardanoCliJsOptions } from "cardanocli-js";
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
 import fs from "fs/promises";
+import fsSync from "fs";
 import { v4 } from "uuid";
+import path from "path";
 
 interface CardanoApiOptions {
   network: string;
@@ -272,13 +273,53 @@ export class CardanoAPI {
     return this.options.socketPath;
   }
 
+  private genWalletPaymentKeys(walletDir: string) {
+    const paymentVkey = path.join(walletDir, "payment.vkey");
+    const paymentSkey = path.join(walletDir, "payment.skey");
+    const command = `${this.getCliPath()} address key-gen --verification-key-file ${paymentVkey} --signing-key-file ${paymentSkey}`;
+    console.log("[CARDANO_API] Key gen wallet payment command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Key gen wallet payment command:", output);
+  }
+
+  private genWalletStakeKeys(walletDir: string) {
+    const stakeVkey = path.join(walletDir, "stake.vkey");
+    const stakeSkey = path.join(walletDir, "stake.skey");
+    const command = `${this.getCliPath()} address key-gen --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
+    console.log("[CARDANO_API] Key gen wallet stake command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Key gen wallet stake command:", output);
+  }
+
+  private buildWalletShelleyAddr(walletDir: string, outFilePath: string) {
+    const paymentVkey = path.join(walletDir, "payment.vkey");
+    if (!fsSync.existsSync(paymentVkey)) {
+      this.genWalletPaymentKeys(walletDir);
+    }
+    const stakeVkey = path.join(walletDir, "stake.vkey");
+    if (!fsSync.existsSync(stakeVkey)) {
+      this.genWalletStakeKeys(walletDir);
+    }
+    const command = `${this.getCliPath()} address build --payment-verification-key-file ${paymentVkey} --stake-verification-key-file ${stakeVkey} --out-file ${outFilePath} --${this.getNetwork()}`;
+    console.log("[CARDANO_API] Build wallet shelley addr command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Build wallet shelley addr output:", output);
+  }
+
   async getWalletAddr(walletName: string): Promise<string> {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
     const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
 
+    if (!fsSync.existsSync(outPaymentAddrFile)) {
+      this.buildWalletShelleyAddr(privAccountDir, outPaymentAddrFile);
+    }
+
     const walletAddr = (
       await fs.readFile(outPaymentAddrFile, { encoding: "utf-8" })
-    ).toString();
+    )
+      .toString()
+      .trim()
+      .replace(/(\r\n|\r|\n)*/gm, "");
 
     return walletAddr;
   }
