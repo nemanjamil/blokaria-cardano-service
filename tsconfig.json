@@ -6,7 +6,12 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "allowJs": true
+    "allowJs": true,
   },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "ecosystem.config.js"
+  ],
   "lib": ["es2015"]
 }
