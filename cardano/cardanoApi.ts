@@ -285,7 +285,7 @@ export class CardanoAPI {
   private genWalletStakeKeys(walletName: string, walletDir: string) {
     const stakeVkey = path.join(walletDir, `${walletName}.stake.vkey`);
     const stakeSkey = path.join(walletDir, `${walletName}.stake.skey`);
-    const command = `${this.getCliPath()} stake-address --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
+    const command = `${this.getCliPath()} stake-address key-gen --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
     console.log("[CARDANO_API] Key gen wallet stake command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Key gen wallet stake command:", output);
