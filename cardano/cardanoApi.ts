@@ -51,6 +51,7 @@ export interface TransactionOptions {
   txOut: string;
   amount: number;
   dir: string;
+  socketPath: string;
   walletName: string;
   metadata?: Record<string, any>;
 }
@@ -93,7 +94,7 @@ export class Transaction {
 
   private getProtocolParams() {
     const protocolFile = new TxFile(".json");
-    const command = `${this.getCliPath()} query protocol-parameters --${this.getNetwork()} --out-file ${protocolFile.getPath()}`;
+    const command = `${this.getCliPath()} query protocol-parameters --${this.getNetwork()} --out-file ${protocolFile.getPath()} --socket-path ${this.getSocketPath()}`;
     console.log("[CARDANO_API] Get protocol parameters command:", command);
     const output = execSync(command);
     console.log(
@@ -120,6 +121,10 @@ export class Transaction {
     );
 
     return outPaymentKeyFile;
+  }
+
+  private getSocketPath(): string {
+    return this.options.socketPath;
   }
 
   constructor(options: TransactionOptions) {
@@ -279,6 +284,7 @@ export class CardanoAPI {
       cliPath: this.getCliPath(),
       dir: this.options.dir,
       network: this.getNetwork(),
+      socketPath: this.options.socketPath,
     });
   }
 }
