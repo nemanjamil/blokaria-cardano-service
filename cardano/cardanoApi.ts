@@ -275,7 +275,7 @@ export class CardanoAPI {
 
   private genWalletPaymentKeys(walletName: string, walletDir: string) {
     const paymentVkey = path.join(walletDir, `${walletName}.payment.vkey`);
-    const paymentSkey = path.join(walletDir, `${walletDir}.payment.skey`);
+    const paymentSkey = path.join(walletDir, `${walletName}.payment.skey`);
     const command = `${this.getCliPath()} address key-gen --verification-key-file ${paymentVkey} --signing-key-file ${paymentSkey}`;
     console.log("[CARDANO_API] Key gen wallet payment command:", command);
     const output = execSync(command).toString("utf-8");
