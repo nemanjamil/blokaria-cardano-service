@@ -118,7 +118,7 @@ router.post("/", async (req, res) => {
         console.dir(metaDataObjPayload, { depth: null });
 
         const transaction = cardanoApi.createTransaction({
-            amount: 10 * 1_000_000, // to lovelace
+            amount: amountValue * 1_000_000, // to lovelace
             txIn: walletTxIn,
             txOut: receiver,
             walletAddress: walletAddr,
