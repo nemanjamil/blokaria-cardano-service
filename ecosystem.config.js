@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'app',
-      script: 'yarn',
+      script: 'npm',
       args: 'start',
     },
   ],
