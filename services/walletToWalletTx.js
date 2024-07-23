@@ -121,6 +121,7 @@ router.post("/", async (req, res) => {
             amount: amountValue * 1_000_000, // to lovelace
             txIn: walletTxIn,
             txOut: receiver,
+            walletAddress: walletAddr,
             walletName: walletName,
             metadata: metaDataObjPayload
         })
