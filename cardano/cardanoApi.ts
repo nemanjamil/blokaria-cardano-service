@@ -297,13 +297,31 @@ export class CardanoAPI {
     outFilePath: string
   ) {
     const paymentVkey = path.join(walletDir, `payment.vkey`);
+    const stakeVkey = path.join(walletDir, `stake.vkey`);
+    const paymentScriptFile = path.join(walletDir, "payment.script");
+    if (
+      !fsSync.existsSync(paymentVkey) &&
+      fsSync.existsSync(stakeVkey) &&
+      fsSync.existsSync(paymentScriptFile)
+    ) {
+      const command = `${this.getCliPath()} address build --payment-script-file ${paymentScriptFile} --stake-verification-key-file ${stakeVkey} --out-file ${outFilePath} --${this.getNetwork()}`;
+      console.log(
+        "[CARDANO_API] Generate wallet address using payment script file cmd:",
+        command
+      );
+      const output = execSync(command).toString("utf-8");
+      console.log(
+        "[CARDANO_API] Generate wallet address using payment script file output:",
+        output
+      );
+    }
     if (!fsSync.existsSync(paymentVkey)) {
       this.genWalletPaymentKeys(walletName, walletDir);
     }
-    const stakeVkey = path.join(walletDir, `stake.vkey`);
     if (!fsSync.existsSync(stakeVkey)) {
       this.genWalletStakeKeys(walletName, walletDir);
     }
+
     const command = `${this.getCliPath()} address build --payment-verification-key-file ${paymentVkey} --stake-verification-key-file ${stakeVkey} --out-file ${outFilePath} --${this.getNetwork()}`;
     console.log("[CARDANO_API] Build wallet shelley addr command:", command);
     const output = execSync(command).toString("utf-8");
@@ -312,16 +330,9 @@ export class CardanoAPI {
 
   async getWalletAddr(walletName: string): Promise<string> {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
-    const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
+    const outPaymentAddrFile = `${privAccountDir}/base.addr`;
 
-    const paymentVkey = path.join(privAccountDir, `payment.vkey`);
-    const stakeVkey = path.join(privAccountDir, `stake.vkey`);
-
-    if (
-      !fsSync.existsSync(outPaymentAddrFile) ||
-      !fsSync.existsSync(paymentVkey) ||
-      !fsSync.existsSync(stakeVkey)
-    ) {
+    if (!fsSync.existsSync(outPaymentAddrFile)) {
       this.buildWalletShelleyAddr(
         walletName,
         privAccountDir,
