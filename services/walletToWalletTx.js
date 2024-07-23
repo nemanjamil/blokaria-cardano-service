@@ -137,11 +137,11 @@ router.post("/", async (req, res) => {
 
         const signedTx = transaction.sign(finalTx)
 
-        console.log(`Signed transaction and saved at '${signedTx}'`)
+        console.log(`Signed transaction and saved at '${signedTx.getPath()}'`)
 
         console.log("\nStarted submitting transaction")
 
-        const txHash = transaction.submit()
+        const txHash = transaction.submit(signedTx)
 
         console.log("Submitted transaction successfully with hash:", txHash)
 
