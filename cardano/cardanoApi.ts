@@ -273,32 +273,36 @@ export class CardanoAPI {
     return this.options.socketPath;
   }
 
-  private genWalletPaymentKeys(walletDir: string) {
-    const paymentVkey = path.join(walletDir, "payment.vkey");
-    const paymentSkey = path.join(walletDir, "payment.skey");
+  private genWalletPaymentKeys(walletName: string, walletDir: string) {
+    const paymentVkey = path.join(walletDir, `${walletName}.payment.vkey`);
+    const paymentSkey = path.join(walletDir, `${walletDir}.payment.skey`);
     const command = `${this.getCliPath()} address key-gen --verification-key-file ${paymentVkey} --signing-key-file ${paymentSkey}`;
     console.log("[CARDANO_API] Key gen wallet payment command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Key gen wallet payment command:", output);
   }
 
-  private genWalletStakeKeys(walletDir: string) {
-    const stakeVkey = path.join(walletDir, "stake.vkey");
-    const stakeSkey = path.join(walletDir, "stake.skey");
+  private genWalletStakeKeys(walletName: string, walletDir: string) {
+    const stakeVkey = path.join(walletDir, `${walletName}.stake.vkey`);
+    const stakeSkey = path.join(walletDir, `${walletName}.stake.skey`);
     const command = `${this.getCliPath()} address key-gen --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
     console.log("[CARDANO_API] Key gen wallet stake command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Key gen wallet stake command:", output);
   }
 
-  private buildWalletShelleyAddr(walletDir: string, outFilePath: string) {
-    const paymentVkey = path.join(walletDir, "payment.vkey");
+  private buildWalletShelleyAddr(
+    walletName: string,
+    walletDir: string,
+    outFilePath: string
+  ) {
+    const paymentVkey = path.join(walletDir, `${walletName}.payment.vkey`);
     if (!fsSync.existsSync(paymentVkey)) {
-      this.genWalletPaymentKeys(walletDir);
+      this.genWalletPaymentKeys(walletName, walletDir);
     }
-    const stakeVkey = path.join(walletDir, "stake.vkey");
+    const stakeVkey = path.join(walletDir, `${walletName}.stake.vkey`);
     if (!fsSync.existsSync(stakeVkey)) {
-      this.genWalletStakeKeys(walletDir);
+      this.genWalletStakeKeys(walletName, walletDir);
     }
     const command = `${this.getCliPath()} address build --payment-verification-key-file ${paymentVkey} --stake-verification-key-file ${stakeVkey} --out-file ${outFilePath} --${this.getNetwork()}`;
     console.log("[CARDANO_API] Build wallet shelley addr command:", command);
@@ -310,8 +314,19 @@ export class CardanoAPI {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
     const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
 
-    if (!fsSync.existsSync(outPaymentAddrFile)) {
-      this.buildWalletShelleyAddr(privAccountDir, outPaymentAddrFile);
+    const paymentVkey = path.join(privAccountDir, `${walletName}.payment.vkey`);
+    const stakeVkey = path.join(privAccountDir, `${walletName}.stake.vkey`);
+
+    if (
+      !fsSync.existsSync(outPaymentAddrFile) ||
+      !fsSync.existsSync(paymentVkey) ||
+      !fsSync.existsSync(stakeVkey)
+    ) {
+      this.buildWalletShelleyAddr(
+        walletName,
+        privAccountDir,
+        outPaymentAddrFile
+      );
     }
 
     const walletAddr = (
