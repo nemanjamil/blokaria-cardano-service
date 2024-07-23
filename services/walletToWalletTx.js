@@ -126,11 +126,13 @@ router.post("/", async (req, res) => {
             metadata: metaDataObjPayload
         })
 
+        await transaction.setMetadata(metaDataObjPayload)
+
         console.log("Transaction Created:", transaction)
 
         console.log("Started building transaction")
 
-        const finalTx = await transaction.buildV2()
+        const finalTx = transaction.buildV2()
 
         console.log(`Built transaction file with fee at '${finalTx.getPath()}'`)
 

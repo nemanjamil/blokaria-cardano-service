@@ -73,25 +73,20 @@ export class Transaction {
     return this.network;
   }
 
-  private async getMetadata() {
-    if (this.options.metadata) {
-      console.log("[CARDANO_API] Found metadata:", this.options.metadata);
-      const metadataFile = new TxFile("-metadata.json");
-      console.log(
-        `[CARDANO_API] Writing metadata json to '${metadataFile.getPath()}'`
-      );
-      await fs.writeFile(
-        metadataFile.getPath(),
-        JSON.stringify(this.options.metadata),
-        {
-          encoding: "utf-8",
-        }
-      );
-      this.metadata = metadataFile;
-    } else {
-      console.log("[CARDANO_API] No metadata provided");
-      this.metadata = null;
-    }
+  async setMetadata(metadata: Record<string, any>) {
+    console.log("[CARDANO_API] Found metadata:", this.options.metadata);
+    const metadataFile = new TxFile("-metadata.json");
+    console.log(
+      `[CARDANO_API] Writing metadata json to '${metadataFile.getPath()}'`
+    );
+    await fs.writeFile(
+      metadataFile.getPath(),
+      JSON.stringify(this.options.metadata),
+      {
+        encoding: "utf-8",
+      }
+    );
+    this.metadata = metadataFile;
   }
 
   private getProtocolParams() {
@@ -134,7 +129,7 @@ export class Transaction {
     this.network = options.network;
     this.amount = options.amount;
     this.options = options;
-    this.getMetadata();
+    this.metadata = null;
   }
 
   async build(): Promise<TxFile> {
