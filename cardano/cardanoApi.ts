@@ -181,6 +181,9 @@ export class Transaction {
     const output = execSync(command);
     console.log("[CARDANO_API] Submit tx output:", output.toString("utf-8"));
     txFile.unload();
+    if (this.metadata) {
+      this.metadata.unload();
+    }
 
     return txId;
   }
@@ -271,7 +274,7 @@ export class CardanoAPI {
 
   async getWalletAddr(walletName: string): Promise<string> {
     const privAccountDir = `${this.options.dir}/priv/wallet/${walletName}`;
-    const outPaymentAddrFile = `${privAccountDir}/${walletName}.payment.addr`;
+    const outPaymentAddrFile = `${privAccountDir}/payment.addr`;
 
     const walletAddr = (
       await fs.readFile(outPaymentAddrFile, { encoding: "utf-8" })
