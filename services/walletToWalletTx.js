@@ -142,7 +142,7 @@ router.post("/", async (req, res) => {
 
         console.log("\nStarted submitting transaction")
 
-        const txHash = transaction.submit(signedTx)
+        const txHash = await transaction.submit(signedTx)
 
         console.log("Submitted transaction successfully with hash:", txHash)
 
