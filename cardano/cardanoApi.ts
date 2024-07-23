@@ -155,7 +155,7 @@ export class Transaction {
 
   submit(txFile: TxFile): string {
     const txId = this.getTransactionId(txFile);
-    const command = `${this.getCliPath()} transaction submit --tx-file ${txFile.getPath()} --${this.getNetwork()}`;
+    const command = `${this.getCliPath()} transaction submit --tx-file ${txFile.getPath()} --${this.getNetwork()} --socket-path ${this.getSocketPath()}`;
     console.log("[CARDANO_API] Submit tx command:", command);
     const output = execSync(command);
     console.log("[CARDANO_API] Submit tx output:", output.toString("utf-8"));
