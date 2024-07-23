@@ -140,7 +140,7 @@ export class Transaction {
     // const fee = this.calculateTransactionFee(draft, 1);
     draft.unload();
     const fee = 100000;
-    this.amount -= fee;
+    // this.amount -= fee;
     return await this.finalRawTransaction(fee, 1000);
   }
 
