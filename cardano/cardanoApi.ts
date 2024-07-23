@@ -137,7 +137,9 @@ export class Transaction {
 
   async build(): Promise<TxFile> {
     const draft = await this.draftTransaction();
-    const fee = this.calculateTransactionFee(draft, 1);
+    // const fee = this.calculateTransactionFee(draft, 1);
+    draft.unload();
+    const fee = 100000;
     this.amount -= fee;
     return await this.finalRawTransaction(fee, 1000);
   }
