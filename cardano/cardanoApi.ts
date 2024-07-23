@@ -152,11 +152,15 @@ export class Transaction {
     const invalidBefore = 0;
     const outFile = new TxFile(".raw");
 
+    const metadataFile = this.metadata;
+
     const changeAddress = this.options.walletAddress;
 
     const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
       this.amount
-    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
+    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()}${
+      metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""
+    } --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
     console.log("[CARDANO_API] Build smart tx command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Build smart tx output:", output);
@@ -175,15 +179,15 @@ export class Transaction {
     return signedFile;
   }
 
-  submit(txFile: TxFile): string {
+  async submit(txFile: TxFile): Promise<string> {
     const txId = this.getTransactionId(txFile);
     const command = `${this.getCliPath()} transaction submit --tx-file ${txFile.getPath()} --${this.getNetwork()} --socket-path ${this.getSocketPath()}`;
     console.log("[CARDANO_API] Submit tx command:", command);
     const output = execSync(command);
     console.log("[CARDANO_API] Submit tx output:", output.toString("utf-8"));
-    txFile.unload();
+    await txFile.unload();
     if (this.metadata) {
-      this.metadata.unload();
+      await this.metadata.unload();
     }
 
     return txId;
