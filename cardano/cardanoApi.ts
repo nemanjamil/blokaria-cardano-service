@@ -215,9 +215,7 @@ export class Transaction {
     const { txIn, txOut } = this.options;
     const metadataFile = this.metadata;
     const amount = this.amount;
-    const command = `${this.getCliPath()} transaction build-raw --tx-in ${txIn} --tx-out ${txOut}+${
-      amount - calculatedFee
-    }${
+    const command = `${this.getCliPath()} transaction build-raw --tx-in ${txIn} --tx-out ${txOut}+${amount}${
       metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""
     } --fee ${calculatedFee} --ttl ${
       tip.slot + ttlAllowance
