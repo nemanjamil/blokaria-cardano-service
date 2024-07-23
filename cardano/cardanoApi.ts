@@ -49,6 +49,7 @@ export interface TransactionOptions {
   network: string;
   txIn: string;
   txOut: string;
+  walletAddress: string;
   amount: number;
   dir: string;
   socketPath: string;
@@ -150,9 +151,11 @@ export class Transaction {
     const invalidBefore = 0;
     const outFile = new TxFile(".raw");
 
+    const changeAddress = this.options.walletAddress;
+
     const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
       this.amount
-    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${txIn} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
+    }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()} --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
     console.log("[CARDANO_API] Build smart tx command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Build smart tx output:", output);
@@ -293,7 +296,10 @@ export class CardanoAPI {
   }
 
   createTransaction(
-    options: Omit<TransactionOptions, "cliPath" | "dir" | "network">
+    options: Omit<
+      TransactionOptions,
+      "cliPath" | "dir" | "network" | "socketPath"
+    >
   ): Transaction {
     return new Transaction({
       ...options,
