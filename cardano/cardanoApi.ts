@@ -252,17 +252,19 @@ export class CardanoAPI {
     return walletAddr;
   }
 
+  queryUtxo(address: string): Record<string, any> {
+    const command = `${this.getCliPath()} query utxo --address ${address} --${this.getNetwork()} --output-json`;
+    console.log("[CARDANO_API] Query UTXO command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Query UTXO output:", output);
+    return JSON.parse(output);
+  }
+
   getQueryTip(): Record<string, any> {
     const output = execSync(
       `${this.getCliPath()} query tip --${this.getNetwork()}`
     );
     return JSON.parse(output.toString("utf-8"));
-  }
-
-  queryUtxo(address: string) {
-    execSync(
-      `${this.getCliPath()} query utxo --address ${address} --${this.getNetwork()}`
-    );
   }
 
   createTransaction(
