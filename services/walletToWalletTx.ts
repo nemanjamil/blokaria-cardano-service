@@ -89,8 +89,11 @@ router.post("/", async (req, res) => {
     console.log("Fetched wallet address by name", walletName, ":", walletAddr);
     const sender = cardanoApi.queryUtxo(walletAddr);
     console.log("Wallet sender fetched:", sender);
-    const walletTxIn = Object.keys(sender)[0];
-    const walletBalance = sender[walletTxIn].value.lovelace;
+    const walletTxIns = Object.keys(sender);
+    const walletBalance = walletTxIns.reduce(
+      (prev, curr) => prev + sender[curr].value.lovelace,
+      0
+    );
 
     console.log(
       "Balance of Sender wallet: " + walletBalance / 1_000_000 + " ADA"
@@ -109,7 +112,7 @@ router.post("/", async (req, res) => {
 
     const transaction = cardanoApi.createSimpleTransaction(wallet, walletAddr, {
       amount: amountValue * 1_000_000, // to lovelace
-      txIn: walletTxIn,
+      txIn: walletTxIns,
       txOut: receiver,
     });
 
