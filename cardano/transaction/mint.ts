@@ -44,14 +44,14 @@ export class MintTransaction extends Transaction {
       "[CARDANO_API] Get minimum amount to send (mint) output:",
       output
     );
-    const amount = Number(output.replace(/\D*/gim, ""));
+    const amount = Number(output.replace(/\D*/gim, "")) + 10_000;
     return amount;
   }
 
   build(): TxFile {
     const txIn = this.options.txIn;
     const txOut = this.options.txOut;
-    const invalidHereAfter = this.getQueryTip().slot + 10000;
+    const invalidHereAfter = this.getQueryTip().slot + 10_000;
     const invalidBefore = 0;
 
     const outFile = new TxFile(".txn");
