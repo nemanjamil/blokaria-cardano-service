@@ -1,9 +1,13 @@
-var express = require("express");
-var router = express.Router();
-const Joi = require("joi");
-const cardano = require("../config/cardano");
+import express from "express";
+import Joi from "joi";
+import { cardanoApi } from "../cardano/cardanoApi";
+import { TxFile } from "../cardano/txFile";
+
+// const cardano = require("../config/cardano");
 // const wallet = cardano.wallet("BLOKARIA")
 // app.use(express.json())
+
+const router = express.Router();
 
 const bodySchema = Joi.object({
   imageIPFS: Joi.string().min(3).max(100).required(),
@@ -26,7 +30,7 @@ router.post("/", async (req, res) => {
 
   try {
     console.log("GENERATE NFT START \n\n");
-    const value = await bodySchema.validateAsync(body);
+    await bodySchema.validateAsync(body);
 
     console.log("Successfull Validation");
 
@@ -37,27 +41,37 @@ router.post("/", async (req, res) => {
     let storedIntoDb = body.storedIntoDb;
     let additionalMetaData = body.additionalMetaData;
 
-
     //res.json({imageIPFS,authors})
 
     console.log("GenerateNft Cardano Wallet Name", walletName);
     console.log("StoredIntoDb", storedIntoDb);
     console.log("AdditionalMetaData", additionalMetaData);
 
-    const wallet = cardano.wallet(walletName);
+    const wallet = cardanoApi.createWallet(walletName);
+
+    const walletAddr = await wallet.getAddress();
+
+    const sender = cardanoApi.queryUtxo(walletAddr);
+    console.log("Wallet sender fetched:", sender);
+
+    const walletTxIn = Object.keys(sender)[0];
 
     //console.log("wallet", wallet)
 
     const mintScript = {
-      keyHash: cardano.addressKeyHash(wallet.name),
+      keyHash: wallet.getAddressKeyHash(),
       type: "sig",
     };
 
     console.log("mS", mintScript);
 
+    const scriptFile = new TxFile(".script");
+
+    await scriptFile.writeString(JSON.stringify(mintScript));
+
     // 3. Create POLICY_ID
 
-    const POLICY_ID = cardano.transactionPolicyid(mintScript);
+    const POLICY_ID = cardanoApi.getPolicyId(scriptFile);
 
     console.log("GenerateNft P_ID ", POLICY_ID);
 
@@ -96,70 +110,82 @@ router.post("/", async (req, res) => {
       },
     };
 
-    metadata[721][POLICY_ID][ASSET_NAME] = { ...metadata[721][POLICY_ID][ASSET_NAME], ...additionalMetaData }
+    metadata[721][POLICY_ID][ASSET_NAME] = {
+      ...metadata[721][POLICY_ID][ASSET_NAME],
+      ...additionalMetaData,
+    };
 
+    const transaction = cardanoApi.createMintTransaction(
+      wallet,
+      {
+        assetName: ASSET_NAME,
+        policyId: POLICY_ID,
+        changeAddress: walletAddr,
+        policyScript: scriptFile,
+      },
+      {
+        amount: 1,
+        txIn: walletTxIn,
+        txOut: walletAddr,
+      }
+    );
 
     console.log("7. GenerateNft metadata ", metadata);
     // 7. Define transaction
-    const tx = {
-      txIn: wallet.balance().utxo,
-      txOut: [
-        {
-          address: wallet.paymentAddr,
-          value: { ...wallet.balance().value, [ASSET_ID]: 1 },
-        },
-      ],
-      mint: [
-        { action: "mint", quantity: 1, asset: ASSET_ID, script: mintScript },
-      ],
-      metadata,
-      witnessCount: 2,
-    };
+    // const tx = {
+    //   txIn: walletTxIn,
+    //   txOut: [
+    //     {
+    //       address: wallet.paymentAddr,
+    //       value: { ...wallet.balance().value, [ASSET_ID]: 1 },
+    //     },
+    //   ],
+    //   mint: [
+    //     { action: "mint", quantity: 1, asset: ASSET_ID, script: mintScript },
+    //   ],
+    //   metadata,
+    //   witnessCount: 2,
+    // };
 
-    console.log("8. GenerateNft tx.txIn ", tx.txIn);
-    console.log("9. GenerateNft tx.txOut ", tx.txOut);
+    console.log("8. GenerateNft tx.txIn ", walletTxIn);
+    console.log("9. GenerateNft tx.txOut ", walletAddr);
 
-    if (
-      Object.keys(tx.txOut[0].value).includes("undefined") ||
-      Object.keys(tx.txIn[0].value).includes("undefinded")
-    ) {
-      delete tx.txOut[0].value.undefined;
-      delete tx.txIn[0].value.undefined;
-    }
+    // if (
+    //   Object.keys(tx.txOut[0].value).includes("undefined") ||
+    //   Object.keys(tx.txIn[0].value).includes("undefinded")
+    // ) {
+    //   delete tx.txOut[0].value.undefined;
+    //   delete tx.txIn[0].value.undefined;
+    // }
 
     console.log("10. Pass OK ");
 
-    // 8. Build transaction
-    const buildTransaction = (tx) => {
-      const raw = cardano.transactionBuildRaw(tx);
-      const fee = cardano.transactionCalculateMinFee({
-        ...tx,
-        txBody: raw,
-      });
-      tx.txOut[0].value.lovelace -= fee;
-      return cardano.transactionBuildRaw({ ...tx, fee });
-    };
-    const raw = buildTransaction(tx);
+    // // 8. Build transaction
+    // const buildTransaction = (tx) => {
+    //   const raw = cardano.transactionBuildRaw(tx);
+    //   const fee = cardano.transactionCalculateMinFee({
+    //     ...tx,
+    //     txBody: raw,
+    //   });
+    //   tx.txOut[0].value.lovelace -= fee;
+    //   return cardano.transactionBuildRaw({ ...tx, fee });
+    // };
+    const raw = transaction.build();
 
     console.log("11. GenerateNft raw ", raw);
     // 9. Sign transaction
-    const signTransaction = (wallet, tx) => {
-      console.log("wallet.payment.skey", wallet.payment.skey);
-      return cardano.transactionSign({
-        signingKeys: [wallet.payment.skey, wallet.payment.skey],
-        txBody: tx,
-      });
-    };
 
-    const signed = signTransaction(wallet, raw);
+    const signed = await transaction.sign(raw);
 
     console.log("12. GenerateNft signed ", signed);
     // 10. Submit transaction
-    const txHash = await cardano.transactionSubmit(signed);
+    const txHash = await transaction.submit(signed);
 
     console.log("13. GenerateNft txHash ", txHash);
 
-    console.log("14. GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet");
+    console.log(
+      "14. GENERATE NFT FINISH - go to  createCardanoNftWithAssignWallet"
+    );
     //res.send(txHash)
     res.json({ txHash, assetId: ASSET_ID });
   } catch (err) {
