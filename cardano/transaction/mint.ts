@@ -62,7 +62,11 @@ export class MintTransaction extends Transaction {
 
     const amountToSend = this.calculateMinRequiredAmount();
 
-    const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${amountToSend}+${
+    const txInParam = Array.isArray(txIn)
+      ? txIn.map((tx) => `--tx-in ${tx}`).join(" ")
+      : `--tx-in ${txIn}`;
+
+    const command = `${this.getCliPath()} transaction build ${txInParam} --tx-out "${txOut}+${amountToSend}+${
       this.amount
     } ${this.mintOptions.policyId}.${assetName}" --change-address ${
       this.mintOptions.changeAddress

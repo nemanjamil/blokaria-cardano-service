@@ -26,7 +26,11 @@ export class SimpleTransaction extends Transaction {
 
     const changeAddress = this.changeAddress;
 
-    const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
+    const txInParam = Array.isArray(txIn)
+      ? txIn.map((tx) => `--tx-in ${tx}`).join(" ")
+      : `--tx-in ${txIn}`;
+
+    const command = `${this.getCliPath()} transaction build ${txInParam} --tx-out "${txOut}+${
       this.amount
     }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()}${
       metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""

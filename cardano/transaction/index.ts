@@ -5,7 +5,7 @@ import { Wallet } from "../wallet";
 export interface TransactionOptions {
   cliPath: string;
   network: string;
-  txIn: string;
+  txIn: string | string[];
   txOut: string;
   amount: number;
   dir: string;
