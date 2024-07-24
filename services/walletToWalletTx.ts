@@ -107,11 +107,10 @@ router.post("/", async (req, res) => {
     console.log("\n\n metaDataObjPayload");
     console.dir(metaDataObjPayload, { depth: null });
 
-    const transaction = cardanoApi.createTransaction(wallet, {
+    const transaction = cardanoApi.createSimpleTransaction(wallet, walletAddr, {
       amount: amountValue * 1_000_000, // to lovelace
       txIn: walletTxIn,
       txOut: receiver,
-      walletAddress: walletAddr,
     });
 
     await transaction.setMetadata(metaDataObjPayload);
@@ -120,7 +119,7 @@ router.post("/", async (req, res) => {
 
     console.log("Started building transaction");
 
-    const finalTx = transaction.buildV2();
+    const finalTx = transaction.build();
 
     console.log(`Built transaction file with fee at '${finalTx.getPath()}'`);
 
