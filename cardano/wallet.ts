@@ -26,12 +26,23 @@ export class Wallet {
     return this.options.network;
   }
 
-  getPaymentKeyPath(): string {
+  getPaymentSKeyPath(): string {
     console.log("[CARDANO_API] Get wallet payment key path start");
     const privAccountDir = `${this.options.dir}/priv/wallet/${this.name}`;
     const outPaymentKeyFile = `${privAccountDir}/payment.skey`;
     console.log(
-      `[CARDANO_API] Get wallet payment key path is '${outPaymentKeyFile}'`
+      `[CARDANO_API] Get wallet payment skey path is '${outPaymentKeyFile}'`
+    );
+
+    return outPaymentKeyFile;
+  }
+
+  getPaymentVKeyPath(): string {
+    console.log("[CARDANO_API] Get wallet payment key path start");
+    const privAccountDir = `${this.options.dir}/priv/wallet/${this.name}`;
+    const outPaymentKeyFile = `${privAccountDir}/payment.vkey`;
+    console.log(
+      `[CARDANO_API] Get wallet payment vkey path is '${outPaymentKeyFile}'`
     );
 
     return outPaymentKeyFile;
@@ -86,6 +97,20 @@ export class Wallet {
     console.log("[CARDANO_API] Build wallet shelley addr command:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Build wallet shelley addr output:", output);
+  }
+
+  private getWalletDir(): string {
+    return `${this.options.dir}/priv/wallet/${this.name}`;
+  }
+
+  getAddressKeyHash(vFileName: string = "payment.vkey"): string {
+    const vkeyPath = path.join(this.getWalletDir(), vFileName);
+    const command = `${this.getCliPath()} address key-hash --payment-verification-key ${vkeyPath}`;
+    console.log("[CARDANO_API] Get wallet address key hash:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Build wallet shelley addr output:", output);
+    const keyHash = output.trim().replace(/(\r\n|\n|\r)*/gm, "");
+    return keyHash;
   }
 
   async getAddress(): Promise<string> {
