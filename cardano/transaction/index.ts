@@ -44,7 +44,7 @@ export abstract class Transaction {
     console.log(
       `[CARDANO_API] Writing metadata json to '${metadataFile.getPath()}'`
     );
-    metadataFile.writeString(JSON.stringify(metadata));
+    await metadataFile.writeString(JSON.stringify(metadata));
     this.metadata = metadataFile;
   }
 
