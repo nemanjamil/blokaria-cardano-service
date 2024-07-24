@@ -32,15 +32,15 @@ export class MintTransaction extends Transaction {
 
     const metadataFile = this.metadata;
 
+    const assetName = Buffer.from(this.mintOptions.assetName).toString("hex");
+
     const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
       this.amount
-    } ${this.mintOptions.policyId}.${
-      this.mintOptions.assetName
-    }" --change-address ${this.mintOptions.changeAddress} --mint="${
-      this.amount
-    } ${this.mintOptions.policyId}.${
-      this.mintOptions.assetName
-    }" --minting-script-file ${this.mintOptions.policyScript.getPath()} --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --${this.getNetwork()}${
+    } ${this.mintOptions.policyId}.${assetName}" --change-address ${
+      this.mintOptions.changeAddress
+    } --mint="${this.amount} ${
+      this.mintOptions.policyId
+    }.${assetName}" --minting-script-file ${this.mintOptions.policyScript.getPath()} --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --${this.getNetwork()}${
       metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""
     } --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
     console.log("[CARDANO_API] Build smart tx command:", command);
