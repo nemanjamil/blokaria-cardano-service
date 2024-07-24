@@ -123,7 +123,6 @@ router.post("/", async (req, res) => {
             txOut: receiver,
             walletAddress: walletAddr,
             walletName: walletName,
-            metadata: metaDataObjPayload
         })
 
         await transaction.setMetadata(metaDataObjPayload)
