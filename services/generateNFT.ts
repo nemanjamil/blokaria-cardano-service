@@ -78,9 +78,7 @@ router.post("/", async (req, res) => {
     // 4. Define ASSET_NAME
     const ASSET_NAME = assetName;
     // Convert Asset ASCII name to HEX
-    const ASSET_NAME_HEX = ASSET_NAME.split("")
-      .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
-      .join("");
+    const ASSET_NAME_HEX = Buffer.from(ASSET_NAME).toString("hex");
 
     console.log("5. ASSET_NAME_HEX ", ASSET_NAME_HEX);
 
@@ -93,7 +91,7 @@ router.post("/", async (req, res) => {
     const metadata = {
       721: {
         [POLICY_ID]: {
-          [ASSET_NAME]: {
+          [ASSET_NAME_HEX]: {
             name: ASSET_NAME,
             image: imageIPFS,
             mediaType: "image/jpeg",
