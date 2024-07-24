@@ -108,8 +108,8 @@ router.post("/", async (req, res) => {
       },
     };
 
-    metadata[721][POLICY_ID][ASSET_NAME] = {
-      ...metadata[721][POLICY_ID][ASSET_NAME],
+    metadata[721][POLICY_ID][ASSET_NAME_HEX] = {
+      ...metadata[721][POLICY_ID][ASSET_NAME_HEX],
       ...additionalMetaData,
     };
 
