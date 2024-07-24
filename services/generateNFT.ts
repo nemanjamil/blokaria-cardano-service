@@ -130,6 +130,8 @@ router.post("/", async (req, res) => {
       }
     );
 
+    await transaction.setMetadata(metadata);
+
     console.log("7. GenerateNft metadata ", metadata);
     // 7. Define transaction
     // const tx = {
