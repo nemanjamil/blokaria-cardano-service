@@ -22,6 +22,32 @@ export class MintTransaction extends Transaction {
     this.mintOptions = mintOptions;
   }
 
+  private getAssetName(): string {
+    return Buffer.from(this.mintOptions.assetName).toString("hex");
+  }
+
+  calculateMinRequiredAmount() {
+    const txOut = this.options.txOut;
+    const assetName = this.getAssetName();
+
+    //cardano-cli transaction calculate-min-value --protocol-params-file protocol.json --tx-out "addr_test1qr8ptk4k8u52tgnyqq4s508zj9skjkvxa7escmnwrumz9mwmfhncrtfdavpsru93j4cgz0rhe9d6ergx4etkr39sl86scy2nrq+1 ea280504857939ef226ee482c08857935d7147fdd71ad1a1ab289321.54657374203537"
+    const protocolFile = this.getProtocolParams();
+    const command = `${this.getCliPath()} transaction calculate-min-value --protocol-params-file ${protocolFile.getPath()} --tx-out "${txOut}+${
+      this.amount
+    } ${this.mintOptions.policyId}.${assetName}"`;
+    console.log(
+      "[CARDANO_API] Get minimum amount to send (mint) command:",
+      command
+    );
+    const output = execSync(command).toString("utf-8");
+    console.log(
+      "[CARDANO_API] Get minimum amount to send (mint) output:",
+      output
+    );
+    const amount = Number(output.replace(/\D*/gim, ""));
+    return amount;
+  }
+
   build(): TxFile {
     const txIn = this.options.txIn;
     const txOut = this.options.txOut;
@@ -32,9 +58,11 @@ export class MintTransaction extends Transaction {
 
     const metadataFile = this.metadata;
 
-    const assetName = Buffer.from(this.mintOptions.assetName).toString("hex");
+    const assetName = this.getAssetName();
 
-    const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${
+    const amountToSend = this.calculateMinRequiredAmount();
+
+    const command = `${this.getCliPath()} transaction build --tx-in ${txIn} --tx-out "${txOut}+${amountToSend}+${
       this.amount
     } ${this.mintOptions.policyId}.${assetName}" --change-address ${
       this.mintOptions.changeAddress
