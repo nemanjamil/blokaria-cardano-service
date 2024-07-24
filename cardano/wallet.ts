@@ -105,7 +105,7 @@ export class Wallet {
 
   getAddressKeyHash(vFileName: string = "payment.vkey"): string {
     const vkeyPath = path.join(this.getWalletDir(), vFileName);
-    const command = `${this.getCliPath()} address key-hash --payment-verification-key ${vkeyPath}`;
+    const command = `${this.getCliPath()} address key-hash --payment-verification-key-file ${vkeyPath}`;
     console.log("[CARDANO_API] Get wallet address key hash:", command);
     const output = execSync(command).toString("utf-8");
     console.log("[CARDANO_API] Build wallet shelley addr output:", output);
