@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
     const sender = cardanoApi.queryUtxo(walletAddr);
     console.log("Wallet sender fetched:", sender);
 
-    const walletTxIn = Object.keys(sender)[0];
+    const walletTxIns = Object.keys(sender);
 
     //console.log("wallet", wallet)
 
@@ -123,7 +123,7 @@ router.post("/", async (req, res) => {
       },
       {
         amount: 1,
-        txIn: walletTxIn,
+        txIn: walletTxIns,
         txOut: walletAddr,
       }
     );
@@ -147,7 +147,7 @@ router.post("/", async (req, res) => {
     //   witnessCount: 2,
     // };
 
-    console.log("8. GenerateNft tx.txIn ", walletTxIn);
+    console.log("8. GenerateNft tx.txIn ", walletTxIns);
     console.log("9. GenerateNft tx.txOut ", walletAddr);
 
     // if (
