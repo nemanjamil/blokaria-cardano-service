@@ -33,6 +33,12 @@ export class TxFile {
     console.log(`[CARDANO_TX_FILE] New file at '${this.path}'`);
   }
 
+  async writeString(content: string) {
+    await fs.writeFile(this.getPath(), content, {
+      encoding: "utf-8",
+    });
+  }
+
   async unload() {
     console.log(
       `[CARDANO_TX_FILE] Unloading (deleting) tx file at '${this.path}'`
@@ -74,18 +80,12 @@ export class Transaction {
   }
 
   async setMetadata(metadata: Record<string, any>) {
-    console.log("[CARDANO_API] Found metadata:", this.options.metadata);
+    console.log("[CARDANO_API] Found metadata:", metadata);
     const metadataFile = new TxFile("-metadata.json");
     console.log(
       `[CARDANO_API] Writing metadata json to '${metadataFile.getPath()}'`
     );
-    await fs.writeFile(
-      metadataFile.getPath(),
-      JSON.stringify(this.options.metadata),
-      {
-        encoding: "utf-8",
-      }
-    );
+    metadataFile.writeString(JSON.stringify(metadata));
     this.metadata = metadataFile;
   }
 
