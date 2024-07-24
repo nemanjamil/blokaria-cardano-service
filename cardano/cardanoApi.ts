@@ -1,6 +1,13 @@
 import { execSync } from "child_process";
-import { Transaction, TransactionOptions } from "./transaction";
+import {
+  MintTransaction,
+  MintTransactionOptions,
+  SimpleTransaction,
+  Transaction,
+  TransactionOptions,
+} from "./transaction";
 import { Wallet, WalletOptions } from "./wallet";
+import { TxFile } from "./txFile";
 
 interface CardanoApiOptions {
   network: string;
@@ -10,6 +17,11 @@ interface CardanoApiOptions {
   socketPath: string;
   shelleyGenesisPath: string;
 }
+
+export type PureTransactionOptions = Omit<
+  TransactionOptions,
+  "cliPath" | "dir" | "network" | "socketPath"
+>;
 
 export class CardanoAPI {
   private readonly options: CardanoApiOptions;
@@ -47,20 +59,48 @@ export class CardanoAPI {
     return JSON.parse(output.toString("utf-8"));
   }
 
-  createTransaction(
-    wallet: Wallet,
-    options: Omit<
-      TransactionOptions,
-      "cliPath" | "dir" | "network" | "socketPath"
-    >
-  ): Transaction {
-    return new Transaction(wallet, {
+  getPolicyId(scriptFile: TxFile): string {
+    const command = `${this.getCliPath()} transaction policyid --script-file ${scriptFile.getPath()}`;
+    console.log("[CARDANO_API] Get tx policy id command:", command);
+    const output = execSync(command).toString("utf-8");
+    console.log("[CARDANO_API] Get tx policy id output:", output);
+    const policyid = output.trim().replace(/(\r\n|\n|\r)*/gm, "");
+    console.log("[CARDANO_API] Policy ID:", policyid);
+    return policyid;
+  }
+
+  private getTransactionOptions(options: PureTransactionOptions) {
+    return {
       ...options,
       cliPath: this.getCliPath(),
       dir: this.options.dir,
       network: this.getNetwork(),
       socketPath: this.options.socketPath,
-    });
+    };
+  }
+
+  createSimpleTransaction(
+    wallet: Wallet,
+    changeAddress: string,
+    options: PureTransactionOptions
+  ): Transaction {
+    return new SimpleTransaction(
+      wallet,
+      changeAddress,
+      this.getTransactionOptions(options)
+    );
+  }
+
+  createMintTransaction(
+    wallet: Wallet,
+    mintOptions: MintTransactionOptions,
+    options: PureTransactionOptions
+  ): Transaction {
+    return new MintTransaction(
+      wallet,
+      mintOptions,
+      this.getTransactionOptions(options)
+    );
   }
 
   createWallet(walletName: string): Wallet {
