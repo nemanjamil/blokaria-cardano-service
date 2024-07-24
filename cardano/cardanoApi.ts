@@ -272,7 +272,7 @@ export class CardanoAPI {
     return this.options.socketPath;
   }
 
-  private genWalletPaymentKeys(walletName: string, walletDir: string) {
+  private genWalletPaymentKeys(walletDir: string) {
     const paymentVkey = path.join(walletDir, `payment.vkey`);
     const paymentSkey = path.join(walletDir, `payment.skey`);
     const command = `${this.getCliPath()} address key-gen --verification-key-file ${paymentVkey} --signing-key-file ${paymentSkey}`;
@@ -281,7 +281,7 @@ export class CardanoAPI {
     console.log("[CARDANO_API] Key gen wallet payment command:", output);
   }
 
-  private genWalletStakeKeys(walletName: string, walletDir: string) {
+  private genWalletStakeKeys(walletDir: string) {
     const stakeVkey = path.join(walletDir, `stake.vkey`);
     const stakeSkey = path.join(walletDir, `stake.skey`);
     const command = `${this.getCliPath()} stake-address key-gen --verification-key-file ${stakeVkey} --signing-key-file ${stakeSkey}`;
@@ -290,11 +290,7 @@ export class CardanoAPI {
     console.log("[CARDANO_API] Key gen wallet stake command:", output);
   }
 
-  private buildWalletShelleyAddr(
-    walletName: string,
-    walletDir: string,
-    outFilePath: string
-  ) {
+  private buildWalletShelleyAddr(walletDir: string, outFilePath: string) {
     const paymentVkey = path.join(walletDir, `payment.vkey`);
     const stakeVkey = path.join(walletDir, `stake.vkey`);
     const paymentScriptFile = path.join(walletDir, "payment.script");
@@ -315,10 +311,10 @@ export class CardanoAPI {
       );
     }
     if (!fsSync.existsSync(paymentVkey)) {
-      this.genWalletPaymentKeys(walletName, walletDir);
+      this.genWalletPaymentKeys(walletDir);
     }
     if (!fsSync.existsSync(stakeVkey)) {
-      this.genWalletStakeKeys(walletName, walletDir);
+      this.genWalletStakeKeys(walletDir);
     }
 
     const command = `${this.getCliPath()} address build --payment-verification-key-file ${paymentVkey} --stake-verification-key-file ${stakeVkey} --out-file ${outFilePath} --${this.getNetwork()}`;
@@ -332,11 +328,7 @@ export class CardanoAPI {
     const outPaymentAddrFile = `${privAccountDir}/base.addr`;
 
     if (!fsSync.existsSync(outPaymentAddrFile)) {
-      this.buildWalletShelleyAddr(
-        walletName,
-        privAccountDir,
-        outPaymentAddrFile
-      );
+      this.buildWalletShelleyAddr(privAccountDir, outPaymentAddrFile);
     }
 
     const walletAddr = (
