@@ -7,8 +7,8 @@ on:
 
 env: 
   BLOKARIA_WEBSITE: 'https://testnet.blokaria.com/'
-  RECEIVER_ADDR: 'addr_test1qqy6mh2en4evwtftsqga7206x7gds9nczeazmth372e8malmv5q2kh07p6qgt6nc9fkawqp09ynvdf3el9hdrt2gg0pspfhm8g'
-  CARDANO_NET_MAGIC: 'testnet-magic 1'
+  RECEIVER_ADDR: 'addr_test1qzm6pmsn6wk55lzucqc3rls6evcwelz9a0v8p93sk6xu63unzny0fmcma635udm94yxl466juagdta0fkyvqerx8yd5sxcax9a'
+  CARDANO_NET_MAGIC: '1'
 
 jobs:
   build:
@@ -62,7 +62,7 @@ jobs:
         script: |
           cd /opt/cardano/cardano_plain_express
           npm install
-          pm2 restart app
+          pm2 restart ecosystem.config.js
         
        
    

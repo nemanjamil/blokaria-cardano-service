@@ -2,7 +2,7 @@ name: Node.js TESTJEDAN CI
 
 on:
   push:
-    branches: [ "testjedan" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 env: 
@@ -62,7 +62,7 @@ jobs:
         script: |
           cd /var/www/express-cardano
           npm install
-          pm2 restart app
+          pm2 restart ecosystem.config.js
         
        
    
