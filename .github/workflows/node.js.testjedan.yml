@@ -2,7 +2,7 @@ name: Node.js TESTJEDAN CI
 
 on:
   push:
-    branches: [ "testjedan" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 env: 
