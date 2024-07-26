@@ -4,7 +4,7 @@ import { TxFile } from "../txFile";
 import { Wallet } from "../wallet";
 
 export class SimpleTransaction extends Transaction {
-  private readonly changeAddress: string;
+  protected readonly changeAddress: string;
 
   constructor(
     wallet: Wallet,
