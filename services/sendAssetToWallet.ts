@@ -119,7 +119,7 @@ router.post("/", async (req, res) => {
     console.log("SendAssetToWallet txSigned ", signed);
     // 8. submit the transaction
 
-    const txHash = transaction.submit(signed);
+    const txHash = await transaction.submit(signed);
 
     console.log("SendAssetToClient FINISH");
     console.log("txHash: ", txHash);
