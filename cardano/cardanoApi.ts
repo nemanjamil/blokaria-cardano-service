@@ -8,6 +8,7 @@ import {
 } from "./transaction";
 import { Wallet, WalletOptions } from "./wallet";
 import { TxFile } from "./txFile";
+import { AssetTransaction, AssetTransactionOptions } from "./transaction/asset";
 
 interface CardanoApiOptions {
   network: string;
@@ -89,6 +90,18 @@ export class CardanoAPI {
       changeAddress,
       this.getTransactionOptions(options)
     );
+  }
+
+  createAssetTransaction(
+    wallet: Wallet,
+    changeAddress: string,
+    assetOptions: AssetTransactionOptions,
+    options: PureTransactionOptions
+  ): Transaction {
+    return new AssetTransaction(wallet, changeAddress, {
+      ...this.getTransactionOptions(options),
+      ...assetOptions,
+    });
   }
 
   createMintTransaction(
