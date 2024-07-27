@@ -126,12 +126,13 @@ export class CardanoAPI {
 }
 
 const shelleyGenesisPath = process.env.SHELLEY_GENESIS_PATH;
+const cliPath = process.env.CARDANO_CLI_LOCAL_PATH;
 
 const cardanoApi = new CardanoAPI({
   network: process.env.CARDANO_NET_MAGIC,
   dir: "/opt/cardano/cnode",
   shelleyGenesisPath,
-  cliPath: "/home/admin/.local/bin/cardano-cli",
+  cliPath,
   socketPath: "/opt/cardano/cnode/sockets/node.socket",
 });
 
