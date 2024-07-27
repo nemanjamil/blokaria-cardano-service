@@ -2,67 +2,67 @@ name: Node.js MAINNET CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
-env: 
-  BLOKARIA_WEBSITE: 'https://blokaria.com/'
-  RECEIVER_ADDR: 'addr1qykyv7umttswavdj94z4sa6z9nud5c3je0dks90wjyk4aren9vn3r9wfp245xqtd0jvqy4vmenmysxhleylfh8nlpd8sy73f5m'
-  CARDANO_NET_MAGIC: 'mainnet'
+env:
+  BLOKARIA_WEBSITE: "https://blokaria.com/"
+  RECEIVER_ADDR: "addr1qykyv7umttswavdj94z4sa6z9nud5c3je0dks90wjyk4aren9vn3r9wfp245xqtd0jvqy4vmenmysxhleylfh8nlpd8sy73f5m"
+  CARDANO_NET_MAGIC: "mainnet"
+  CARDANO_CLI_LOCAL_PATH: "/home/siki/.local/bin/cardano-cli"
+  CARDANO_NODE_SOCKET_PATH: "/opt/cardano/cnode/sockets"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [16.x]
-    
+
     steps:
-    - name: Print ENV KEYS
-      ## Reference your environment variables
-      run: |
-        echo "The API key is: $BLOKARIA_WEBSITE" 
-        echo "Receiver Addr: $RECEIVER_ADDR" 
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_CARDANO_NET_MAGIC: ${{ env.CARDANO_NET_MAGIC }}
-        envkey_BLOKARIA_WEBSITE: ${{ env.BLOKARIA_WEBSITE }} 
-        envkey_RECEIVER_ADDR: ${{ env.RECEIVER_ADDR }} 
-        file_name: .env
-    - name: Copy file .env via ssh password
-      uses: appleboy/scp-action@master
-      with:
-        host: '144.91.89.39'
-        username: 'siki'
-        key: ${{ secrets.SSH_KEY }}
-        port: 22
-        source: '.env'
-        target: '/var/www/express-cardano'
-    - uses: actions/checkout@master
-    - name: Copy file via ssh password
-      uses: appleboy/scp-action@master
-      with:
-        host: '144.91.89.39'
-        username: 'siki'
-        key: ${{ secrets.SSH_KEY }}
-        port: 22
-        source: "."
-        target: "/var/www/express-cardano"
-        
-    - name: Restart Service
-      uses: appleboy/ssh-action@master
-      with:
-        host: '144.91.89.39'
-        username: 'siki'
-        key: ${{ secrets.SSH_KEY }}
-        port: 22
-        script: |
-          cd /var/www/express-cardano
-          npm install
-          pm2 restart ecosystem.config.js
-        
-       
-   
+      - name: Print ENV KEYS
+        ## Reference your environment variables
+        run: |
+          echo "The API key is: $BLOKARIA_WEBSITE" 
+          echo "Receiver Addr: $RECEIVER_ADDR"
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_CARDANO_NET_MAGIC: ${{ env.CARDANO_NET_MAGIC }}
+          envkey_BLOKARIA_WEBSITE: ${{ env.BLOKARIA_WEBSITE }}
+          envkey_RECEIVER_ADDR: ${{ env.RECEIVER_ADDR }}
+          envkey_CARDANO_CLI_LOCAL_PATH: ${{ env.CARDANO_CLI_LOCAL_PATH }}
+          envkey_CARDANO_NODE_SOCKET_PATH: ${{ env.CARDANO_NODE_SOCKET_PATH }}
+          file_name: .env
+      - name: Copy file .env via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: "144.91.89.39"
+          username: "siki"
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: ".env"
+          target: "/var/www/express-cardano"
+      - uses: actions/checkout@master
+      - name: Copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: "144.91.89.39"
+          username: "siki"
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "."
+          target: "/var/www/express-cardano"
+
+      - name: Restart Service
+        uses: appleboy/ssh-action@master
+        with:
+          host: "144.91.89.39"
+          username: "siki"
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/express-cardano
+            npm install
+            pm2 restart ecosystem.config.js
