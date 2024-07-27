@@ -24,7 +24,7 @@ app.get("/healthCheck", (req, res) => {
   res.send("Hello World!");
 });
 
-// test 2
+// test empty 2
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
