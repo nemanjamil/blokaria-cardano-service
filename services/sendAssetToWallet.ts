@@ -65,19 +65,22 @@ router.post("/", async (req, res) => {
       0
     );
 
-    const assetMetadata = await getAssetMetadata(walletUtxo, assetId);
-
     console.log("walletBalance", walletBalance);
 
-    let getAllData = walletBalance.utxo[0].value;
+    const [policyId, assetName] = assetId.split(".");
+    // const assetMetadata = await getAssetMetadata(walletUtxo, assetId);
 
-    const numberOfAssets = Object.keys(getAllData).length;
+    console.log("Asset metadata:", { policyId, assetName });
 
-    console.log("numberOfAssets", numberOfAssets);
+    // let getAllData = walletBalance.utxo[0].value;
 
-    delete getAllData.lovelace;
-    delete getAllData.undefined;
-    delete getAllData[assetId];
+    // const numberOfAssets = Object.keys(getAllData).length;
+
+    // console.log("numberOfAssets", numberOfAssets);
+
+    // delete getAllData.lovelace;
+    // delete getAllData.undefined;
+    // delete getAllData[assetId];
 
     console.log("Sender wallet name ", walletName);
     console.log(
@@ -90,8 +93,8 @@ router.post("/", async (req, res) => {
       wallet,
       walletAddr,
       {
-        assetName: assetId,
-        policyId: assetMetadata.policyId,
+        assetName: assetName,
+        policyId: policyId,
       },
       {
         amount: 1_000_000,
@@ -116,7 +119,7 @@ router.post("/", async (req, res) => {
     console.log("SendAssetToWallet txSigned ", signed);
     // 8. submit the transaction
 
-    const txHash = transaction.submit(signed);
+    const txHash = await transaction.submit(signed);
 
     console.log("SendAssetToClient FINISH");
     console.log("txHash: ", txHash);
