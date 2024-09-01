@@ -28,6 +28,7 @@ export class AssetTransaction extends SimpleTransaction {
       socketPath: options.socketPath,
       txIn: options.txIn,
       txOut: options.txOut,
+      era: options.era,
     });
     this.assetOptions = {
       assetName: options.assetName,
