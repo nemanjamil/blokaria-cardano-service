@@ -10,6 +10,7 @@ export interface TransactionOptions {
   amount: number;
   dir: string;
   socketPath: string;
+  era: string;
 }
 
 export abstract class Transaction {
@@ -18,6 +19,7 @@ export abstract class Transaction {
   protected readonly options: TransactionOptions;
   protected readonly wallet: Wallet;
   protected readonly amount: number;
+  protected readonly era: string;
 
   protected metadata?: TxFile;
 
@@ -25,6 +27,7 @@ export abstract class Transaction {
     this.cliPath = options.cliPath;
     this.network = options.network;
     this.amount = options.amount;
+    this.era = options.era;
     this.options = options;
     this.wallet = wallet;
     this.metadata = null;
@@ -32,6 +35,10 @@ export abstract class Transaction {
 
   protected getCliPath(): string {
     return this.cliPath;
+  }
+
+  protected getEra(): string {
+    return this.era;
   }
 
   protected getNetwork(): string {

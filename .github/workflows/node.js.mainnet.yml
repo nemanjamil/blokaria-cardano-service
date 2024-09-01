@@ -11,6 +11,7 @@ env:
   CARDANO_NET_MAGIC: "mainnet"
   CARDANO_CLI_LOCAL_PATH: "/home/siki/.local/bin/cardano-cli"
   CARDANO_NODE_SOCKET_PATH: "/opt/cardano/cnode/sockets"
+  CARDANO_ERA: "conway"
 
 jobs:
   build:
@@ -34,6 +35,7 @@ jobs:
           envkey_RECEIVER_ADDR: ${{ env.RECEIVER_ADDR }}
           envkey_CARDANO_CLI_LOCAL_PATH: ${{ env.CARDANO_CLI_LOCAL_PATH }}
           envkey_CARDANO_NODE_SOCKET_PATH: ${{ env.CARDANO_NODE_SOCKET_PATH }}
+          envkey_CARDANO_ERA: ${{ env.CARDANO_ERA }}
           file_name: .env
       - name: Copy file .env via ssh password
         uses: appleboy/scp-action@master

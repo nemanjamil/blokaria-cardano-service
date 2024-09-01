@@ -30,7 +30,9 @@ export class SimpleTransaction extends Transaction {
       ? txIn.map((tx) => `--tx-in ${tx}`).join(" ")
       : `--tx-in ${txIn}`;
 
-    const command = `${this.getCliPath()} transaction build ${txInParam} --tx-out "${txOut}+${
+    const command = `${this.getCliPath()} transaction ${
+      this.getEra
+    } build ${txInParam} --tx-out "${txOut}+${
       this.amount
     }" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()}${
       metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""

@@ -12,7 +12,7 @@ import { AssetTransaction, AssetTransactionOptions } from "./transaction/asset";
 
 interface CardanoApiOptions {
   network: string;
-  era?: string;
+  era: string;
   dir: string;
   cliPath?: string;
   socketPath: string;
@@ -21,7 +21,7 @@ interface CardanoApiOptions {
 
 export type PureTransactionOptions = Omit<
   TransactionOptions,
-  "cliPath" | "dir" | "network" | "socketPath"
+  "cliPath" | "dir" | "network" | "socketPath" | "era"
 >;
 
 export class CardanoAPI {
@@ -29,6 +29,10 @@ export class CardanoAPI {
 
   constructor(options: CardanoApiOptions) {
     this.options = options;
+  }
+
+  private getEra(): string {
+    return this.options.era;
   }
 
   private getCliPath(): string {
@@ -74,6 +78,7 @@ export class CardanoAPI {
     return {
       ...options,
       cliPath: this.getCliPath(),
+      era: this.getEra(),
       dir: this.options.dir,
       network: this.getNetwork(),
       socketPath: this.options.socketPath,
@@ -133,6 +138,7 @@ const cardanoApi = new CardanoAPI({
   dir: "/opt/cardano/cnode",
   shelleyGenesisPath,
   cliPath,
+  era: process.env.CARDANO_ERA,
   socketPath: "/opt/cardano/cnode/sockets/node.socket",
 });
 
