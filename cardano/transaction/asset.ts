@@ -77,7 +77,9 @@ export class AssetTransaction extends SimpleTransaction {
 
     const { policyId, assetName } = this.assetOptions;
 
-    const command = `${this.getCliPath()} transaction build ${txInParam} --tx-out ${txOut}+${amountToSend}+"1 ${policyId}.${assetName}" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()}${
+    const command = `${this.getCliPath()} transaction ${
+      this.getEra
+    } build ${txInParam} --tx-out ${txOut}+${amountToSend}+"1 ${policyId}.${assetName}" --invalid-hereafter ${invalidHereAfter} --invalid-before ${invalidBefore} --change-address ${changeAddress} --${this.getNetwork()}${
       metadataFile ? ` --metadata-json-file ${metadataFile.getPath()}` : ""
     } --socket-path ${this.getSocketPath()} --out-file ${outFile.getPath()}`;
     console.log("[CARDANO_API] Build smart tx command:", command);
