@@ -8,25 +8,24 @@ import { cardanoApi } from "../cardano/cardanoApi";
 const router = express.Router();
 
 const bodySchema = Joi.object({
-  userDesc: Joi.string().max(60).optional().allow(""),
-  userFullname: Joi.string().max(60).optional().allow(""),
-  userEmail: Joi.string().email().max(60).optional().allow(""),
-
-  productName: Joi.string().max(60).required(),
-
-  clientEmail: Joi.string().email().max(60).optional().allow(""),
-  clientMessage: Joi.string().max(60).optional().allow(""),
-  clientName: Joi.string().max(60).optional().allow(""),
-
-  walletQrId: Joi.string().max(60).required(),
+  geoLocation: Joi.string().max(60).optional().allow(""),
+  user: Joi.string().max(60).optional().allow(""),
+  email: Joi.string().email().max(60).optional().allow(""),
+  itemName: Joi.string().max(60).required(),
   qrCodeId: Joi.string().max(60).required(),
-
-  contributorData: Joi.string().max(60).optional().allow(""),
-  clientemailcb: Joi.boolean(),
-  ownernamecb: Joi.boolean(),
+  clientMessage: Joi.string().max(60).optional().allow(""),
 
   walletName: Joi.string().max(60).required(),
   amountValue: Joi.number().max(10).required(),
+  plantedBy: Joi.string().max(60).required(),
+
+  //clientEmail: Joi.string().email().max(60).optional().allow(""),
+  //clientName: Joi.string().max(60).optional().allow(""),
+  //walletQrId: Joi.string().max(60).required(),
+
+  //contributorData: Joi.string().max(60).optional().allow(""),
+  //clientemailcb: Joi.boolean(),
+  //ownernamecb: Joi.boolean(),
 });
 
 router.use((req, res, next) => {
@@ -54,6 +53,7 @@ router.post("/", async (req, res) => {
       walletName: body.walletName,
       amountValue: body.amountValue,
       clientMessage: body.clientMessage,
+      plantedBy: body.plantedBy,
       //itemId: body.itemId,
       // clientEmail: body.clientEmail,
       // clientName: body.clientName,
@@ -155,11 +155,12 @@ const generateMetaDataPlain = (qrCodeDbData) => {
   finalArray["email"] = qrCodeDbData.email;
   finalArray["message"] = qrCodeDbData.clientMessage;
   finalArray["itemName"] = qrCodeDbData.itemName;
-  //finalArray["internalCode"] = qrCodeDbData.itemId;
+  finalArray["plantedBy"] = qrCodeDbData.plantedBy;
   finalArray[
     "WebSite"
   ] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.qrCodeId}`;
 
+  //finalArray["internalCode"] = qrCodeDbData.itemId;
   // qrCodeDbData.contributorData
   //   ? (finalArray["Contributor"] = qrCodeDbData.contributorData)
   //   : "";
