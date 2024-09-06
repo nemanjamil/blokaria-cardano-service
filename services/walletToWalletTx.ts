@@ -46,25 +46,20 @@ router.post("/", async (req, res) => {
     console.log("\n\nvalidateAsyncJoi DONE");
 
     let objectToTest = {
-      userDesc: body.userDesc,
-      userFullname: body.userFullname,
-      userEmail: body.userEmail,
-
-      productName: body.productName,
-
-      clientEmail: body.clientEmail,
-      clientMessage: body.clientMessage,
-      clientName: body.clientName,
-
-      walletQrId: body.walletQrId,
+      geoLocation: body.geoLocation,
+      user: body.user,
+      email: body.email,
+      itemName: body.itemName,
       qrCodeId: body.qrCodeId,
-
-      contributorData: body.contributorData,
-      clientemailcb: body.clientemailcb,
-      ownernamecb: body.clientemailcb,
-
       walletName: body.walletName,
       amountValue: body.amountValue,
+      clientMessage: body.clientMessage,
+      //itemId: body.itemId,
+      // clientEmail: body.clientEmail,
+      // clientName: body.clientName,
+      // contributorData: body.contributorData,
+      // clientemailcb: body.clientemailcb,
+      // ownernamecb: body.clientemailcb,
     };
     console.log("\n\nobjectToTest", objectToTest);
 
@@ -155,28 +150,26 @@ const generateMetaDataPlain = (qrCodeDbData) => {
   console.log("\n\n generateMetaDataPlain qrCodeDbData : ", qrCodeDbData);
 
   let finalArray = {};
-  finalArray["ProductName"] = qrCodeDbData.productName;
-  finalArray["CreatorName"] = qrCodeDbData.userFullname;
-  finalArray["CreatorEmail"] = qrCodeDbData.userEmail;
-  finalArray["CreatorMessage"] = qrCodeDbData.userDesc;
-
-  qrCodeDbData.ownernamecb
-    ? (finalArray["ClientName"] = qrCodeDbData.clientName)
-    : "";
-  qrCodeDbData.clientemailcb
-    ? (finalArray["ClientEmail"] = qrCodeDbData.clientEmail)
-    : "";
-  finalArray["ClientMessage"] = qrCodeDbData.clientMessage;
-
-  //finalArray["WebSiteParams"] = ``;
+  finalArray["geoLocation"] = qrCodeDbData.geoLocation;
+  finalArray["user"] = qrCodeDbData.user;
+  finalArray["email"] = qrCodeDbData.email;
+  finalArray["message"] = qrCodeDbData.clientMessage;
+  finalArray["itemName"] = qrCodeDbData.itemName;
+  //finalArray["internalCode"] = qrCodeDbData.itemId;
   finalArray[
     "WebSite"
   ] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.qrCodeId}`;
-  finalArray["InternalCode"] = qrCodeDbData.walletQrId;
 
-  qrCodeDbData.contributorData
-    ? (finalArray["Contributor"] = qrCodeDbData.contributorData)
-    : "";
+  // qrCodeDbData.contributorData
+  //   ? (finalArray["Contributor"] = qrCodeDbData.contributorData)
+  //   : "";
+
+  // qrCodeDbData.ownernamecb
+  //   ? (finalArray["ClientName"] = qrCodeDbData.clientName)
+  //   : "";
+  // qrCodeDbData.clientemailcb
+  //   ? (finalArray["ClientEmail"] = qrCodeDbData.clientEmail)
+  //   : "";
 
   console.dir(finalArray, { depth: null });
 
