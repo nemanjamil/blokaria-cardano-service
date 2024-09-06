@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  BLOKARIA_WEBSITE: "https://testnet.natureplant.com/"
+  BLOKARIA_WEBSITE: "https://natureplant.com/"
   RECEIVER_ADDR: "addr_test1qzm6pmsn6wk55lzucqc3rls6evcwelz9a0v8p93sk6xu63unzny0fmcma635udm94yxl466juagdta0fkyvqerx8yd5sxcax9a"
   CARDANO_NET_MAGIC: "1"
   CARDANO_CLI_LOCAL_PATH: "/home/admin/.local/bin/cardano-cli"
