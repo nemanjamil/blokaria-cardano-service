@@ -157,7 +157,7 @@ const generateMetaDataPlain = (qrCodeDbData) => {
   finalArray["itemName"] = qrCodeDbData.itemName;
   finalArray["plantedBy"] = qrCodeDbData.plantedBy;
   finalArray[
-    "WebSite"
+    "webSite"
   ] = `${process.env.BLOKARIA_WEBSITE}s/${qrCodeDbData.qrCodeId}`;
 
   //finalArray["internalCode"] = qrCodeDbData.itemId;
